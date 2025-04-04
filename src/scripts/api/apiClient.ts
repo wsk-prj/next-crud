@@ -1,5 +1,5 @@
-import api from "@/scripts/api/axiosConfig";
-import { ApiResponse } from "@/scripts/api/types/ApiResponse";
+import api from "./axiosConfig";
+import { ApiResponse } from "./types/ApiResponse";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const apiClient = async <T, U>(
