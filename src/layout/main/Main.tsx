@@ -1,15 +1,15 @@
 "use client";
 
+import useAuthStore from "@/hooks/useAuthStore";
 import Link from "next/link";
-import { useState } from "react";
 
 const Main = ({ children }: { children: React.ReactNode }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { loggedIn } = useAuthStore();
 
   return (
-    <main id="main" className="px-8 py-4 h-5/6">
-      <section>
-        <nav className="flex items-center justify-center gap-4">
+    <main id="main" className="px-8 py-4 h-5/6 flex flex-col gap-y-4">
+      <section id="navbar">
+        <nav className="flex items-center justify-center gap-x-2">
           {loggedIn ? (
             <>
               <Link href="/mypage">!회원정보</Link>
@@ -24,7 +24,11 @@ const Main = ({ children }: { children: React.ReactNode }) => {
           )}
         </nav>
       </section>
-      <section>{children}</section>
+      <section id="content" className="flex-1 flex">
+        <div className="flex-1 rounded-lg bg-gray-100 flex flex-col items-center justify-center gap-y-4">
+          {children}
+        </div>
+      </section>
     </main>
   );
 };
