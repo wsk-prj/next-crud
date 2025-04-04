@@ -1,9 +1,9 @@
 "use client";
 
-import { RegisterDTO } from "@/app/api/v0/user/route";
 import { POST } from "@/scripts/api/apiClient";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { RegisterDTO } from "@/types/User";
 
 const Signup = () => {
   const router = useRouter();
@@ -29,7 +29,7 @@ const Signup = () => {
     }
 
     try {
-      await POST<RegisterDTO>("/api/v0/user", {
+      await POST<RegisterDTO>("/api/v0/auth/signup", {
         loginid: id,
         loginpw: password,
       });
@@ -49,7 +49,7 @@ const Signup = () => {
     <>
       <h2 className="text-2xl font-bold text-center">회원가입</h2>
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <form className="flex flex-col gap-y-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-y-4" onSubmit={handleSubmit} noValidate>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="loginId">
               아이디
