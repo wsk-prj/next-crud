@@ -1,16 +1,13 @@
 "use client";
 
+import { RegisterDTO } from "@/app/api/v0/user/route";
 import { POST } from "@/scripts/api/apiClient";
-import { redirect } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-interface RegisterDTO {
-  loginId: string;
-  password: string;
-}
-
-const Register = () => {
-  const [loginId, setLoginId] = useState("");
+const Signup = () => {
+  const router = useRouter();
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,19 +15,27 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (id.length < 4) {
+      setError("아이디는 4자 이상이어야 합니다.");
+      return;
+    }
+    if (password.length < 8) {
+      setError("비밀번호는 8자 이상이어야 합니다.");
+      return;
+    }
     if (password !== confirmPassword) {
       setError("비밀번호가 일치하지 않습니다.");
       return;
     }
 
     try {
-      const response = await POST<RegisterDTO>("/user", {
-        loginId,
-        password,
+      await POST<RegisterDTO>("/api/v0/user", {
+        loginid: id,
+        loginpw: password,
       });
 
-      console.log(response.data);
-      redirect("/");
+      alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
+      router.push("/auth/login");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -51,9 +56,9 @@ const Register = () => {
             </label>
             <input
               type="text"
-              id="loginId"
-              value={loginId}
-              onChange={(e) => setLoginId(e.target.value)}
+              id="id"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
               className="border border-gray-300 rounded-md p-2 w-full"
               placeholder="아이디를 입력하세요"
               required
@@ -100,4 +105,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Signup;
