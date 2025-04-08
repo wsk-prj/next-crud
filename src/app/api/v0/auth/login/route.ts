@@ -1,7 +1,7 @@
 import { ApiResponse } from "@/types/ApiResponse";
 import { LoginDTO } from "@/lib/user/User";
 import { NextResponse } from "next/server";
-import { login } from "../_authServics";
+import { login } from "../../../../../lib/auth/_authServics";
 
 export async function POST(request: Request) {
   const loginDTO: LoginDTO = await request.json();

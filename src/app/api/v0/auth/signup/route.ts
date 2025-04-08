@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { signup } from "../_authServics";
+import { signup } from "../../../../../lib/user/_userService";
 
 export async function POST(request: Request) {
   const { loginid, loginpw, nickname } = await request.json();
