@@ -11,29 +11,39 @@ interface AuthState {
   logout: () => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
-  loggedIn: typeof window === "undefined" ? false : !!localStorage.getItem("token"),
-  token: typeof window === "undefined" ? null : localStorage.getItem("token"),
-  userInfo: typeof window === "undefined" ? null : JSON.parse(localStorage.getItem("userInfo") || "null"),
+export const useAuthStore = create<AuthState>((set) => ({
+  loggedIn: false,
+  token: null,
+  userInfo: null,
   login: (token: string, userInfo: Payload) => {
-    console.log(`login token: ${token}`);
-    console.log(`login userInfo: ${userInfo}`);
-    if (typeof window === "undefined") {
-      return;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("token", token);
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
     }
-    localStorage.setItem("token", token);
-    localStorage.setItem("userInfo", JSON.stringify(userInfo));
     set({ loggedIn: true, token, userInfo });
   },
   logout: () => {
-    console.log("logout");
-    if (typeof window === "undefined") {
-      return;
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userInfo");
     }
-    localStorage.removeItem("token");
-    localStorage.removeItem("userInfo");
     set({ loggedIn: false, token: null, userInfo: null });
   },
 }));
 
-export default useAuthStore;
+export const initAuthStore = (): void => {
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("token");
+    const userInfoString = localStorage.getItem("userInfo");
+
+    if (token && userInfoString) {
+      try {
+        const userInfo = JSON.parse(userInfoString);
+        useAuthStore.setState({ loggedIn: true, token, userInfo });
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userInfo");
+      }
+    }
+  }
+};
