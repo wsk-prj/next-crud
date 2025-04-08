@@ -3,7 +3,7 @@
 import { POST } from "@/scripts/api/apiClient";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RegisterDTO } from "@/lib/user/User";
+import { RegisterRequest } from "@/lib/user/_userService";
 
 const Signup = () => {
   const router = useRouter();
@@ -34,11 +34,11 @@ const Signup = () => {
     }
 
     try {
-      await POST<RegisterDTO>("/api/v0/auth/signup", {
+      await POST<RegisterRequest>("/api/v0/auth/signup", {
         loginid: id,
         loginpw: password,
         nickname: nickname,
-      });
+      } as RegisterRequest);
 
       alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
       router.push("/auth/login");

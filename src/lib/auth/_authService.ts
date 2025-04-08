@@ -4,18 +4,23 @@ import { Auth } from "./Auth";
 import { findAuthById } from "./_authRepository";
 import { findUserById } from "../user/_userRepository";
 
-export interface LoginDTO {
+export interface LoginRequest {
   loginid: Auth["loginid"];
   loginpw: Auth["loginpw"];
 }
 
-export const login = async (dto: LoginDTO) => {
-  console.log(dto);
+export interface LoginResponse {
+  token: string;
+  payload: Payload;
+}
+
+export const login = async (request: LoginRequest) => {
+  console.log(request);
   // 사용자가 입력한 id가 존재하는지 확인
-  const auth = await findAuthById(dto.loginid);
+  const auth = await findAuthById(request.loginid);
 
   // 사용자가 입력한 비밀번호와 해싱된 비밀번호가 일치하는지 확인
-  const isPasswordEquals = await bcrypt.compare(dto.loginpw, auth.loginpw);
+  const isPasswordEquals = await bcrypt.compare(request.loginpw, auth.loginpw);
   if (!isPasswordEquals) {
     throw new Error("비밀번호가 일치하지 않습니다.");
   }

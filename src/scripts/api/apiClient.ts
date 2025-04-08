@@ -1,42 +1,52 @@
-import api from "./axiosConfig";
+import instance from "./axiosConfig";
 import { ApiResponse } from "../../types/ApiResponse";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { Axios, AxiosError, AxiosResponse } from "axios";
 
-export const apiClient = async <T, U>(
-  url: string,
+interface Response<T> {
+  result: ApiResponse<T> | null;
+  error: ApiResponse<T> | null;
+}
+
+/**
+ * API 호출 함수
+ * Axios 인스턴스의 응답 또는 에러를 처리한 뒤 컴포넌트에 반환한다.
+ *
+ * T: 요청 데이터 타입
+ * U: 응답 데이터 타입
+ */
+const apiClient = async <T, U>(
   method: "GET" | "POST" | "PUT" | "DELETE",
-  data?: T,
-  config?: AxiosRequestConfig
-): Promise<AxiosResponse<U>> => {
-  const response = await api.request<U>({
-    url,
-    method,
-    data,
-    ...config,
-  });
-  return response;
-};
-
-export const GET = <U = ApiResponse>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<U>> => {
-  return apiClient<undefined, U>(url, "GET", undefined, config);
-};
-
-export const POST = <T, U = ApiResponse>(
   url: string,
-  data: T,
-  config?: AxiosRequestConfig
-): Promise<AxiosResponse<U>> => {
-  return apiClient<T, U>(url, "POST", data, config);
+  data?: T
+): Promise<Response<U>> => {
+  try {
+    const response = await instance.request<ApiResponse<U>>({
+      method,
+      url,
+      data,
+    });
+    return { result: response.data as ApiResponse<U>, error: null };
+  } catch (error) {
+    if (!(error instanceof AxiosError)) {
+      console.log("[apiClient] error: ", error);
+      throw error;
+    }
+    return { result: null, error: error.response?.data as ApiResponse<U> };
+  }
 };
 
-export const PUT = <T, U = ApiResponse>(
-  url: string,
-  data: T,
-  config?: AxiosRequestConfig
-): Promise<AxiosResponse<U>> => {
-  return apiClient<T, U>(url, "PUT", data, config);
+export const GET = <U>(url: string): Promise<Response<U>> => {
+  return apiClient<null, U>("GET", url);
 };
 
-export const DELETE = <U = ApiResponse>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<U>> => {
-  return apiClient<undefined, U>(url, "DELETE", undefined, config);
+export const POST = <T, U = null>(url: string, data: T): Promise<Response<U>> => {
+  return apiClient<T, U>("POST", url, data);
+};
+
+export const PUT = <T, U = null>(url: string, data: T): Promise<Response<U>> => {
+  return apiClient<T, U>("PUT", url, data);
+};
+
+export const DELETE = <U>(url: string): Promise<Response<U>> => {
+  return apiClient<null, U>("DELETE", url);
 };

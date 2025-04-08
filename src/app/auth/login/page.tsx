@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import api from "@/scripts/api/axiosConfig";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import useAuthStore from "@/hooks/useAuthStore";
+import { LoginRequest, LoginResponse } from "@/lib/auth/_authService";
+import { POST } from "@/scripts/api/apiClient";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Login = () => {
   const router = useRouter();
@@ -25,25 +26,21 @@ const Login = () => {
       return;
     }
 
-    try {
-      const response = await api.post("/api/v0/auth/login", {
-        loginid: id,
-        loginpw: password,
-      });
+    const { result, error } = await POST<LoginRequest, LoginResponse>("/api/v0/auth/login", {
+      loginid: id,
+      loginpw: password,
+    } as LoginRequest);
 
-      if (response.status === 200) {
-        alert("로그인에 성공했습니다.");
-        login(response.data.token, response.data.payload);
-        router.push("/");
-      } else {
-        setError("로그인에 실패했습니다.");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("로그인 중 알 수 없는 오류가 발생했습니다.");
-      }
+    if (error) {
+      console.log(error);
+      setError(error.message);
+      return;
+    }
+
+    if (result) {
+      alert("로그인에 성공했습니다.");
+      login(result.data.token, result.data.payload);
+      router.push("/");
     }
   };
 
