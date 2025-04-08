@@ -8,7 +8,7 @@ import useAuthStore from "@/hooks/useAuthStore";
 
 const Login = () => {
   const router = useRouter();
-  const auth = useAuthStore();
+  const { login } = useAuthStore();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -33,8 +33,7 @@ const Login = () => {
 
       if (response.status === 200) {
         alert("로그인에 성공했습니다.");
-        auth.setToken(response.data.token);
-        auth.setLoggedIn(true);
+        login(response.data.token, response.data.payload);
         router.push("/");
       } else {
         setError("로그인에 실패했습니다.");

@@ -1,7 +1,7 @@
+import { generateAccessToken, Payload } from "@/lib/jwt";
 import { supabase } from "@/lib/supabase/supabaseClient";
-import { LoginDTO, RegisterDTO } from "@/lib/user/User";
+import User, { LoginDTO, RegisterDTO } from "@/lib/user/User";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 export const signup = async (dto: RegisterDTO) => {
   // 비밀번호 해싱(Bcrypt)
@@ -34,15 +34,19 @@ export const login = async (dto: LoginDTO) => {
   }
 
   // 사용자가 입력한 비밀번호와 해싱된 비밀번호가 일치하는지 확인
-  const isPasswordEquals = await bcrypt.compare(dto.loginpw, data[0].loginpw);
+  const user: User = data[0];
+  const isPasswordEquals = await bcrypt.compare(dto.loginpw, user.loginpw);
   if (!isPasswordEquals) {
     throw new Error("비밀번호가 일치하지 않습니다.");
   }
 
   // JWT 토큰 발급
-  const secretKey = process.env.JWT_SECRET!;
-  const token = jwt.sign({ id: data[0].id }, secretKey);
-  console.log(`Created Token: ${token}`);
+  const payload = {
+    sub: String(user.id),
+    nickname: user.nickname,
+    role: user.role,
+  } as Payload;
+  const token = generateAccessToken(payload);
 
-  return token;
+  return { token, payload };
 };

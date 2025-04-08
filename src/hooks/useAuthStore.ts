@@ -1,29 +1,38 @@
 "use client";
 
+import { Payload } from "@/lib/jwt";
 import { create } from "zustand";
 
 interface AuthState {
   loggedIn: boolean;
   token: string | null;
-  setLoggedIn: (loggedIn: boolean) => void;
-  setToken: (token: string | null) => void;
+  userInfo: Payload | null;
+  login: (token: string, userInfo: Payload) => void;
+  logout: () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
-  loggedIn: false,
+  loggedIn: typeof window === "undefined" ? false : !!localStorage.getItem("token"),
   token: typeof window === "undefined" ? null : localStorage.getItem("token"),
-  setLoggedIn: (loggedIn: boolean) => set({ loggedIn }),
-  setToken: (token: string | null) => {
-    console.log(`setToken: ${token}`);
+  userInfo: typeof window === "undefined" ? null : JSON.parse(localStorage.getItem("userInfo") || "null"),
+  login: (token: string, userInfo: Payload) => {
+    console.log(`login token: ${token}`);
+    console.log(`login userInfo: ${userInfo}`);
     if (typeof window === "undefined") {
       return;
     }
-    if (token) {
-      localStorage.setItem("token", token);
-    } else {
-      localStorage.removeItem("token");
+    localStorage.setItem("token", token);
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+    set({ loggedIn: true, token, userInfo });
+  },
+  logout: () => {
+    console.log("logout");
+    if (typeof window === "undefined") {
+      return;
     }
-    set({ token });
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+    set({ loggedIn: false, token: null, userInfo: null });
   },
 }));
 

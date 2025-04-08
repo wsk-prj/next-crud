@@ -6,11 +6,10 @@ import { useEffect } from "react";
 
 const Logout = () => {
   const router = useRouter();
-  const { setLoggedIn, setToken } = useAuthStore();
+  const { logout } = useAuthStore();
 
   useEffect(() => {
-    setToken(null);
-    setLoggedIn(false);
+    logout();
     alert("로그아웃에 성공했습니다.");
     router.push("/");
   }, []);
