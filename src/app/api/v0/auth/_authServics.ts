@@ -1,9 +1,13 @@
 import { supabase } from "@/lib/supabase/supabaseClient";
 import { LoginDTO, RegisterDTO } from "@/types/User";
+import bcrypt from "bcrypt";
 
 export const signup = async (dto: RegisterDTO) => {
+  // 비밀번호 해싱(Bcrypt)
+  const hashedPassword = await bcrypt.hash(dto.loginpw, 10);
+
   // Supabase에 사용자 정보를 삽입
-  const { error } = await supabase.from("user").insert([{ loginid: dto.loginid, loginpw: dto.loginpw }]);
+  const { error } = await supabase.from("user").insert([{ loginid: dto.loginid, loginpw: hashedPassword }]);
 
   // 오류 처리
   if (error) {
