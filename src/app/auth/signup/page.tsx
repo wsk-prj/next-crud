@@ -33,21 +33,20 @@ const Signup = () => {
       return;
     }
 
-    try {
-      await POST<RegisterRequest>("/api/v0/auth/signup", {
-        loginid: id,
-        loginpw: password,
-        nickname: nickname,
-      } as RegisterRequest);
+    const { result, error } = await POST<RegisterRequest>("/api/v0/auth/signup", {
+      loginid: id,
+      loginpw: password,
+      nickname: nickname,
+    } as RegisterRequest);
 
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    if (result) {
       alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
       router.push("/auth/login");
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("회원가입 중 알 수 없는 오류가 발생했습니다.");
-      }
     }
   };
 
