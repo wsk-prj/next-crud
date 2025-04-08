@@ -17,7 +17,7 @@ export interface Payload extends jwt.JwtPayload {
  * 액세스 토큰 발급
  */
 export const generateAccessToken = (payload: Payload): string => {
-  console.log(`GenerateAccessToken: ${payload}`);
+  console.log(`GenerateAccessToken: ${JSON.stringify(payload)}`);
   const token = jwt.sign(
     {
       sub: String(payload.sub),
@@ -57,7 +57,7 @@ export const generateRefreshToken = (payload: Payload): string => {
 export const decodeToken = (token: string): Payload => {
   try {
     const decoded = jwt.decode(token) as Payload;
-    console.log(`Decoded Payload: ${decoded}`);
+    console.log(`Decoded Payload: ${JSON.stringify(decoded)}`);
     return decoded;
   } catch {
     throw new Error("Invalid token");
