@@ -33,6 +33,7 @@ const Login = () => {
 
       if (response.status === 200) {
         alert("로그인에 성공했습니다.");
+        auth.setToken(response.data.token);
         auth.setLoggedIn(true);
         router.push("/");
       } else {

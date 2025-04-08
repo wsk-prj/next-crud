@@ -14,8 +14,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    await login(loginDTO);
-    return NextResponse.json({ message: "로그인에 성공했습니다." }, { status: 200 });
+    const token = await login(loginDTO);
+    return NextResponse.json({ message: "로그인에 성공했습니다.", token }, { status: 200 });
   } catch {
     return NextResponse.json({ message: "로그인에 실패했습니다." }, { status: 500 });
   }
