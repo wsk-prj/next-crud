@@ -11,6 +11,7 @@ export default interface User {
 export interface RegisterDTO {
   loginid: string;
   loginpw: string;
+  nickname: string;
 }
 
 export interface LoginDTO {

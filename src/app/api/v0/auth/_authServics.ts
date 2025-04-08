@@ -8,7 +8,9 @@ export const signup = async (dto: RegisterDTO) => {
   const hashedPassword = await bcrypt.hash(dto.loginpw, 10);
 
   // Supabase에 사용자 정보를 삽입
-  const { error } = await supabase.from("user").insert([{ loginid: dto.loginid, loginpw: hashedPassword }]);
+  const { error } = await supabase
+    .from("user")
+    .insert([{ loginid: dto.loginid, loginpw: hashedPassword, nickname: dto.nickname }]);
 
   // 오류 처리
   if (error) {

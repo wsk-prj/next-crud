@@ -3,12 +3,13 @@
 import { POST } from "@/scripts/api/apiClient";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RegisterDTO } from "@/types/User";
+import { RegisterDTO } from "@/lib/user/User";
 
 const Signup = () => {
   const router = useRouter();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -27,11 +28,16 @@ const Signup = () => {
       setError("비밀번호가 일치하지 않습니다.");
       return;
     }
+    if (nickname.length < 2) {
+      setError("닉네임은 2자 이상이어야 합니다.");
+      return;
+    }
 
     try {
       await POST<RegisterDTO>("/api/v0/auth/signup", {
         loginid: id,
         loginpw: password,
+        nickname: nickname,
       });
 
       alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
@@ -89,6 +95,20 @@ const Signup = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="border border-gray-300 rounded-md p-2 w-full"
               placeholder="비밀번호를 다시 입력하세요"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="nickname">
+              닉네임
+            </label>
+            <input
+              type="text"
+              id="nickname"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-full"
+              placeholder="닉네임을 입력하세요"
               required
             />
           </div>
