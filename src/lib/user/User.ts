@@ -1,7 +1,11 @@
-export interface User {
-  id: string;
+export default interface User {
+  id: number;
   loginid: string;
   loginpw: string;
+  createdAt: Date;
+  updatedAt: Date;
+  nickname: string;
+  role: string;
 }
 
 export interface RegisterDTO {

@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/types/ApiResponse";
-import { LoginDTO } from "@/types/User";
+import { LoginDTO } from "@/lib/user/User";
 import { NextResponse } from "next/server";
 import { login } from "../_authServics";
 

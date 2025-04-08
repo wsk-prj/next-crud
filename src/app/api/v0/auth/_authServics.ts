@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase/supabaseClient";
-import { LoginDTO, RegisterDTO } from "@/types/User";
+import { LoginDTO, RegisterDTO } from "@/lib/user/User";
 import bcrypt from "bcrypt";
 
 export const signup = async (dto: RegisterDTO) => {
