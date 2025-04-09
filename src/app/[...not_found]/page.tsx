@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function NotFound() {
+export default function NotFound(): React.ReactNode {
   const [count, setCount] = useState(3);
   const router = useRouter();
 

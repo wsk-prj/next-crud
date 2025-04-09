@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { initAuthStore } from "@/hooks/useAuthStore";
 
-export function AuthInitializer() {
+export const AuthInitializer = (): null => {
   useEffect(() => {
     initAuthStore();
   }, []);
 
   return null;
-}
+};

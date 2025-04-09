@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterRequest } from "@/lib/user/_userService";
 
-const Signup = () => {
+const Signup = (): React.ReactNode => {
   const router = useRouter();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -13,7 +13,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     if (id.length < 4) {

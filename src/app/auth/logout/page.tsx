@@ -1,10 +1,10 @@
 "use client";
 
-import useAuthStore from "@/hooks/useAuthStore";
+import { useAuthStore } from "@/hooks/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const Logout = () => {
+const Logout = (): React.ReactNode => {
   const router = useRouter();
   const { logout } = useAuthStore();
 

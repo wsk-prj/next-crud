@@ -1,3 +1,13 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true, // 화살표 함수와 같은 표현식에서 반환 타입을 허용
+        "allowTypedFunctionExpressions": true, // 타입이 지정된 함수 표현식 허용
+        "allowHigherOrderFunctions": true // 고차 함수 허용
+      }
+    ]
+  }
 }

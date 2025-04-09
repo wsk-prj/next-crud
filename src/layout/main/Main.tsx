@@ -1,9 +1,9 @@
 "use client";
 
-import useAuthStore from "@/hooks/useAuthStore";
+import { useAuthStore } from "@/hooks/useAuthStore";
 import Link from "next/link";
 
-const Main = ({ children }: { children: React.ReactNode }) => {
+const Main = ({ children }: { children: React.ReactNode }): React.ReactNode => {
   const { loggedIn } = useAuthStore();
 
   return (

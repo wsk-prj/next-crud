@@ -1,20 +1,20 @@
 "use client";
 
-import useAuthStore from "@/hooks/useAuthStore";
+import { useAuthStore } from "@/hooks/useAuthStore";
 import { LoginRequest, LoginResponse } from "@/lib/auth/_authService";
 import { POST } from "@/scripts/api/apiClient";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const Login = () => {
+const Login = (): React.ReactNode => {
   const router = useRouter();
   const { login } = useAuthStore();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     if (id.length < 4) {

@@ -1,4 +1,4 @@
-const Footer = () => {
+const Footer = (): React.ReactNode => {
   return <footer id="footer" className="h-24 bg-neutral-800 flex items-center justify-center"></footer>;
 };
 
