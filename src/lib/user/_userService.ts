@@ -9,16 +9,16 @@ export interface RegisterRequest {
   nickname: User["nickname"];
 }
 
-export const signup = async (request: RegisterRequest) => {
+export const signup = async (request: RegisterRequest): Promise<void> => {
   // 비밀번호 해싱(Bcrypt)
   const hashedPassword = await bcrypt.hash(request.loginpw, 10);
 
   // Supabase에 사용자 정보를 삽입
   try {
-    const user = await insertUser({ nickname: request.nickname } as User);
-    await insertAuth({ id: user?.[0].id, loginid: request.loginid, loginpw: hashedPassword } as Auth);
+    await insertUser({ nickname: request.nickname } as User);
+    await insertAuth({ loginid: request.loginid, loginpw: hashedPassword } as Auth);
   } catch (error) {
-    console.error("회원가입 중 오류 발생:", error);
-    throw new Error("회원가입에 실패했습니다. 다시 시도해 주세요.");
+    console.error("[signup] Error:", error);
+    throw new Error("회원가입 중 오류가 발생했습니다.");
   }
 };
