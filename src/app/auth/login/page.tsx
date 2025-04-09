@@ -40,7 +40,17 @@ const Login = (): React.ReactNode => {
     if (result) {
       alert("로그인에 성공했습니다.");
       login(result.data.token, result.data.refreshToken, result.data.payload);
-      router.push("/");
+
+      if (typeof window !== "undefined") {
+        const redirectPath = sessionStorage.getItem("redirectAfterLogin");
+
+        if (redirectPath) {
+          sessionStorage.removeItem("redirectAfterLogin");
+          router.push(redirectPath);
+        } else {
+          router.push("/");
+        }
+      }
     }
   };
 
