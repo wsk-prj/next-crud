@@ -4,6 +4,6 @@ export interface Auth {
   id: User["id"];
   loginid: string;
   loginpw: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
 }

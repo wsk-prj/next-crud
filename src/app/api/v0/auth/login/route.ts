@@ -1,6 +1,6 @@
 import { login, LoginRequest, LoginResponse } from "@/lib/auth/_authService";
 import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/ResponseUtil";
+import ResponseUtil from "@/utils/responseUtil";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request): Promise<NextResponse<ApiResponse<LoginResponse | null>>> {

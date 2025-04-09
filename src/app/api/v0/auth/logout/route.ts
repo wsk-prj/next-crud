@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/ResponseUtil";
+import ResponseUtil from "@/utils/responseUtil";
 
 export async function POST(request: Request): Promise<NextResponse<ApiResponse>> {
   return ResponseUtil.success({

@@ -1,8 +1,10 @@
 import { Auth } from "@/lib/auth/Auth";
 import bcrypt from "bcrypt";
-import User from "./User";
+import User, { UserProfile } from "./User";
 import { insertAuth } from "../auth/_authRepository";
-import { insertUser } from "./_userRepository";
+import { deleteUserById, findUserById, insertUser } from "./_userRepository";
+import { GET } from "@/scripts/api/apiClient";
+import User from "./User";
 export interface RegisterRequest {
   loginid: Auth["loginid"];
   loginpw: Auth["loginpw"];
@@ -22,3 +24,22 @@ export const signup = async (request: RegisterRequest): Promise<void> => {
     throw new Error("회원가입 중 오류가 발생했습니다.");
   }
 };
+
+export const getUserProfile = async (id: User["id"]): Promise<UserProfile> => {
+  try {
+    const user = await findUserById(id);
+    return user as UserProfile;
+  } catch (error) {
+    console.error("[getUserProfile] Error:", error);
+    throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
+  }
+};
+
+export async function withdrawUser(id: User["id"]): Promise<void> {
+  try {
+    await deleteUserById(id);
+  } catch (error) {
+    console.error("[withdrawUser] Error:", error);
+    throw new Error("회원 탈퇴 중 오류가 발생했습니다.");
+  }
+}

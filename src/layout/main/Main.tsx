@@ -9,10 +9,8 @@ const Main = ({ children }: { children: React.ReactNode }): React.ReactNode => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (loggedIn) {
-      setIsLoading(false);
-    }
-  }, [loggedIn]);
+    setIsLoading(false);
+  }, [isLoading, loggedIn]);
 
   return (
     <main id="main" className="px-8 py-4 h-5/6 flex flex-col gap-y-4">

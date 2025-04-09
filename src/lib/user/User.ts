@@ -2,6 +2,14 @@ export default interface User {
   id: number;
   nickname: string;
   role: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
+}
+
+export interface UserProfile extends User {
+  nickname: User["nickname"];
+  role: User["role"];
+  created_at: User["created_at"];
+  updated_at: User["updated_at"];
 }

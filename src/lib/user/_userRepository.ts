@@ -14,7 +14,7 @@ export const insertUser = async (user: User): Promise<void> => {
 };
 
 export const findUserById = async (id: User["id"]): Promise<User | null> => {
-  const { data, error } = await supabase.from("user").select("*").eq("id", id);
+  const { data, error } = await supabase.from("user").select("*").eq("id", id).eq("is_deleted", false);
 
   if (error) {
     console.error("[findUserById] Error:", error);
@@ -25,5 +25,15 @@ export const findUserById = async (id: User["id"]): Promise<User | null> => {
     throw new Error("회원 정보가 존재하지 않습니다.");
   }
 
+  console.log("[findUserById] data:", data);
   return data[0];
 };
+
+export async function deleteUserById(id: User["id"]): Promise<void> {
+  const { error } = await supabase.from("user").update({ updated_at: new Date(), is_deleted: true }).eq("id", id);
+
+  if (error) {
+    console.error("[deleteUserById] Error:", error);
+    throw new Error("사용자 삭제 중 오류가 발생했습니다.");
+  }
+}

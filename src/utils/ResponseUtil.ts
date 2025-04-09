@@ -1,7 +1,7 @@
 import { ApiResponse } from "@/types/ApiResponse";
 import { NextResponse } from "next/server";
 
-const now = () => new Date().toISOString();
+const now = (): string => new Date().toISOString();
 
 interface ResponseUtilParams<T> {
   data?: ApiResponse<T>["data"];
@@ -10,7 +10,7 @@ interface ResponseUtilParams<T> {
 }
 
 const ResponseUtil = {
-  success: <T>({ data, message, status }: ResponseUtilParams<T>): NextResponse<ApiResponse<T | null>> => {
+  success: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
     return NextResponse.json(
       {
         message: message ?? "요청 성공",
@@ -20,7 +20,7 @@ const ResponseUtil = {
       { status: status ?? 200 }
     );
   },
-  rejected: <T>({ data, message, status }: ResponseUtilParams<T>): NextResponse<ApiResponse<T | null>> => {
+  rejected: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
     return NextResponse.json(
       {
         message: message ?? "요청 거부",
@@ -30,7 +30,7 @@ const ResponseUtil = {
       { status: status ?? 400 }
     );
   },
-  failed: <T>({ data, message, status }: ResponseUtilParams<T>): NextResponse<ApiResponse<T | null>> => {
+  failed: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
     return NextResponse.json(
       {
         message: message ?? "요청 실패",
