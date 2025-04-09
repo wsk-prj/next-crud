@@ -39,7 +39,7 @@ const Login = (): React.ReactNode => {
 
     if (result) {
       alert("로그인에 성공했습니다.");
-      login(result.data.token, result.data.payload);
+      login(result.data.token, result.data.refreshToken, result.data.payload);
       router.push("/");
     }
   };

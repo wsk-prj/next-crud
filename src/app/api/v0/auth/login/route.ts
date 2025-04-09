@@ -13,10 +13,10 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse<L
   }
 
   try {
-    const { token, payload } = await login(loginRequest);
+    const { token, refreshToken, payload } = await login(loginRequest);
     console.log(`login payload: ${JSON.stringify(payload)}`);
     return ResponseUtil.success({
-      data: { token, payload },
+      data: { token, refreshToken, payload },
       message: "로그인에 성공했습니다.",
     });
   } catch {

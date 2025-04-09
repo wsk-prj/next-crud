@@ -1,4 +1,4 @@
-import { generateAccessToken, Payload } from "@/lib/jwt";
+import { generateAccessToken, generateRefreshToken, Payload } from "@/lib/jwt";
 import bcrypt from "bcrypt";
 import { Auth } from "./Auth";
 import { findAuthById } from "./_authRepository";
@@ -11,11 +11,11 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
+  refreshToken: string;
   payload: Payload;
 }
 
 export const login = async (request: LoginRequest): Promise<LoginResponse> => {
-  console.log(request);
   // 사용자가 입력한 id가 존재하는지 확인
   const auth = await findAuthById(request.loginid);
 
@@ -42,6 +42,7 @@ export const login = async (request: LoginRequest): Promise<LoginResponse> => {
     role: user.role,
   } as Payload;
   const token = generateAccessToken(payload);
+  const refreshToken = generateRefreshToken(payload);
 
-  return { token, payload };
+  return { token, refreshToken, payload };
 };
