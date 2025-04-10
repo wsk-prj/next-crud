@@ -1,6 +1,6 @@
 "use client";
 
-import { Payload } from "@/lib/jwt";
+import { Payload } from "@/lib/tokenProvider";
 import { create } from "zustand";
 
 interface AuthState {

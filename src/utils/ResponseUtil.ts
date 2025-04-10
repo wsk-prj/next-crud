@@ -9,7 +9,7 @@ interface ResponseUtilParams<T> {
   status?: number;
 }
 
-const ResponseUtil = {
+const responseUtil = {
   success: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
     return NextResponse.json(
       {
@@ -42,4 +42,4 @@ const ResponseUtil = {
   },
 };
 
-export default ResponseUtil;
+export default responseUtil;

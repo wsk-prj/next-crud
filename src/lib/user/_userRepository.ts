@@ -29,6 +29,15 @@ export const findUserById = async (id: User["id"]): Promise<User | null> => {
   return data[0];
 };
 
+export const updateUserById = async (id: User["id"], { nickname }: Pick<User, "nickname">): Promise<void> => {
+  const { error } = await supabase.from("user").update({ nickname, updated_at: new Date() }).eq("id", id);
+
+  if (error) {
+    console.error("[updateUserById] Error:", error);
+    throw new Error("사용자 정보를 수정하는 중 오류가 발생했습니다.");
+  }
+};
+
 export async function deleteUserById(id: User["id"]): Promise<void> {
   const { error } = await supabase.from("user").update({ updated_at: new Date(), is_deleted: true }).eq("id", id);
 

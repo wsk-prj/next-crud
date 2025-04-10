@@ -1,6 +1,6 @@
 import instance from "./axiosConfig";
 import { ApiResponse } from "../../types/ApiResponse";
-import { Axios, AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 
 interface Response<T> {
   result: ApiResponse<T> | null;
@@ -15,7 +15,7 @@ interface Response<T> {
  * U: 응답 데이터 타입
  */
 const apiClient = async <T, U>(
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: "GET" | "POST" | "PATCH" | "DELETE",
   url: string,
   data?: T
 ): Promise<Response<U>> => {
@@ -43,8 +43,8 @@ export const POST = <T, U = null>(url: string, data: T): Promise<Response<U>> =>
   return apiClient<T, U>("POST", url, data);
 };
 
-export const PUT = <T, U = null>(url: string, data: T): Promise<Response<U>> => {
-  return apiClient<T, U>("PUT", url, data);
+export const PATCH = <T, U = null>(url: string, data: T): Promise<Response<U>> => {
+  return apiClient<T, U>("PATCH", url, data);
 };
 
 export const DELETE = <U>(url: string): Promise<Response<U>> => {

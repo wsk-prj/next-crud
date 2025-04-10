@@ -1,8 +1,9 @@
-import { generateAccessToken, generateRefreshToken, Payload } from "@/lib/jwt";
+import { Payload } from "@/lib/tokenProvider";
+import TokenProvider from "@/lib/tokenProvider";
 import bcrypt from "bcrypt";
+import { findUserById } from "../user/_userRepository";
 import { Auth } from "./Auth";
 import { findAuthById } from "./_authRepository";
-import { findUserById } from "../user/_userRepository";
 
 export interface LoginRequest {
   loginid: Auth["loginid"];
@@ -41,8 +42,8 @@ export const login = async (request: LoginRequest): Promise<LoginResponse> => {
     nickname: user.nickname,
     role: user.role,
   } as Payload;
-  const token = generateAccessToken(payload);
-  const refreshToken = generateRefreshToken(payload);
+  const token = TokenProvider.generateAccessToken(payload);
+  const refreshToken = TokenProvider.generateRefreshToken(payload);
 
   return { token, refreshToken, payload };
 };

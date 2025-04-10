@@ -25,20 +25,14 @@ instance.interceptors.response.use(
   },
   (error) => {
     if (error.response.status === 401) {
+      console.log("[axiosConfig] Authorization error: ", error.response);
       localStorage.removeItem("token");
-      alert("로그인이 필요한 기능입니다. 로그인 화면으로 이동합니다.");
-      window.location.href = "/auth/login";
-      return;
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userInfo");
+      return Promise.reject(error);
     }
     console.log("[axiosConfig] error: ", error.response);
-    if (error.response.status >= 500) {
-      alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-      return Promise.reject(error);
-    }
-    if (error.response.status >= 400) {
-      alert("잘못된 요청입니다. 다시 시도해주세요.");
-      return Promise.reject(error);
-    }
+    return Promise.reject(error);
   }
 );
 

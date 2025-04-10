@@ -83,7 +83,7 @@ const MyPage = (): React.ReactNode => {
           <div className="flex justify-center gap-4">
             <Link
               href="/mypage/edit"
-              className="bg-neutral-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-neutral-600 transition duration-200"
+              className="bg-neutral-500 text-center text-white font-semibold py-2 px-4 rounded-md hover:bg-neutral-600 transition duration-200"
             >
               !정보 수정
             </Link>
