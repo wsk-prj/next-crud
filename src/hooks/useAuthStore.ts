@@ -27,7 +27,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
 
     if (result != null) {
-      set({ loggedIn: true, payload: result.data.payload });
+      set({ loggedIn: true });
     }
   },
   logout: async () => {
@@ -46,7 +46,6 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 export const initAuthStore = async (): Promise<void> => {
   const { result, error } = await GET<Payload>("/api/v0/auth/payload");
-  console.log("[useAuthStore] initAuthStore: ", result);
 
   if (error) {
     throw new Error(error.message);

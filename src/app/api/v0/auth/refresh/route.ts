@@ -4,11 +4,16 @@ import ResponseUtil from "@/utils/responseUtil";
 import cookieUtil from "@/utils/cookie/cookieUtil";
 import { updateAccessToken } from "@/lib/auth/_authService";
 import { withErrorHandler } from "@/app/api/errorHandler";
+import { UnauthorizedError } from "@/types/error/BadRequest";
 
 export const GET = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
-  const refreshToken = cookieUtil.getCookie("refreshToken");
+  try {
+    const refreshToken = cookieUtil.getCookie("refreshToken");
 
-  await updateAccessToken(refreshToken);
+    await updateAccessToken(refreshToken);
 
-  return ResponseUtil.success();
+    return ResponseUtil.success();
+  } catch {
+    throw new UnauthorizedError("토큰 갱신에 실패했습니다.");
+  }
 });

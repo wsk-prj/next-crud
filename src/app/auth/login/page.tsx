@@ -1,9 +1,16 @@
 "use client";
 
+import { Container } from "@/components/container/Container";
+import Content from "@/components/Content";
+import { Title } from "@/components/text/Title";
 import { useAuthStore } from "@/hooks/useAuthStore";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "../../../components/form/Button";
+import { ErrorBox } from "../../../components/form/ErrorBox";
+import { Form } from "../../../components/form/Form";
+import { Input } from "../../../components/form/Input";
+import { Links } from "@/components/form/Links";
 
 const Login = (): React.ReactNode => {
   const router = useRouter();
@@ -11,6 +18,10 @@ const Login = (): React.ReactNode => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setError("");
+  }, [id, password]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -43,49 +54,20 @@ const Login = (): React.ReactNode => {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center">로그인</h2>
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <form className="flex flex-col gap-y-4" onSubmit={handleSubmit} noValidate>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="loginId">
-              아이디
-            </label>
-            <input
-              type="text"
-              id="loginId"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              placeholder="아이디를 입력하세요"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">
-              비밀번호
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              placeholder="비밀번호를 입력하세요"
-              required
-            />
-          </div>
-          <div className="h-4">{error && <p className="text-red-500 text-sm">{error}</p>}</div>
-          <button
-            type="submit"
-            className="w-full bg-neutral-500 text-white font-semibold py-2 rounded-md hover:bg-neutral-600 transition duration-200"
-          >
-            로그인
-          </button>
-          <div className="text-center">
-            <Link href="/auth/signup">회원가입</Link>
-          </div>
-        </form>
-      </div>
+      <Title.h2>로그인</Title.h2>
+      <Container.md>
+        <Form onSubmit={handleSubmit}>
+          <Input.Text name="id" value={id} onChange={(e) => setId(e.target.value)}>
+            아이디
+          </Input.Text>
+          <Input.Password name="password" value={password} onChange={(e) => setPassword(e.target.value)}>
+            비밀번호
+          </Input.Password>
+          <ErrorBox error={error} />
+          <Button.Primary>로그인</Button.Primary>
+          <Links.Text href="/auth/signup">회원가입</Links.Text>
+        </Form>
+      </Container.md>
     </>
   );
 };

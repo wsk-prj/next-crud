@@ -1,11 +1,19 @@
 "use client";
 
+import { Container } from "@/components/container/Container";
+import Content from "@/components/Content";
+import { Button } from "@/components/form/Button";
+import { Links } from "@/components/form/Links";
+import { Text } from "@/components/text/Text";
+import { Title } from "@/components/text/Title";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { DELETE } from "@/scripts/api/apiClient";
-import Link from "next/link";
+import { dateTimeUtil } from "@/utils/date/dateTimeUtil";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Box } from "../../components/container/Box";
+import { Flex } from "../../components/container/Flex";
 
 const MyPage = (): React.ReactNode => {
   const router = useRouter();
@@ -46,39 +54,42 @@ const MyPage = (): React.ReactNode => {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center">마이페이지</h2>
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg mx-auto">
-        <div className="flex flex-col gap-y-6">
-          <div>
-            <h3 className="text-xl font-semibold border-b pb-2 mb-4">사용자 정보</h3>
-            <div className="bg-gray-50 border border-gray-200 rounded-md p-4">
-              <div className="flex flex-col gap-y-2">
-                <p className="text-gray-700">닉네임</p>
-                <p className="text-end font-medium">{userProfile.nickname}</p>
-                <p className="text-gray-700">가입일</p>
-                <p className="text-end font-medium">{userProfile.created_at.toLocaleString()}</p>
-                <p className="text-gray-700">수정일</p>
-                <p className="text-end font-medium">{userProfile.updated_at.toLocaleString()}</p>
+      <Title.h2>마이페이지</Title.h2>
+      <Container.lg>
+        <Flex.Vertical>
+          <Box.lg>
+            <Flex.Vertical>
+              <div className="mb-2">
+                <Text.md>닉네임</Text.md>
+                <Text.md weight="semibold" align="right">
+                  {userProfile.nickname}
+                </Text.md>
               </div>
-            </div>
+              <div className="mb-2">
+                <Text.md>가입일</Text.md>
+                <Text.md weight="semibold" align="right">
+                  {dateTimeUtil.y4m2d2(userProfile.created_at)}
+                </Text.md>
+              </div>
+              <div className="mb-2">
+                <Text.md>수정일</Text.md>
+                <Text.md weight="semibold" align="right">
+                  {dateTimeUtil.y4m2d2(userProfile.updated_at)}
+                </Text.md>
+              </div>
+            </Flex.Vertical>
+          </Box.lg>
+        </Flex.Vertical>
+        <div className="mb-6"></div>
+        <Flex.Horizontal>
+          <div className="flex-1 w-1/2">
+            <Links.Button href="/mypage/edit">!정보 수정</Links.Button>
           </div>
-
-          <div className="flex justify-center gap-4">
-            <Link
-              href="/mypage/edit"
-              className="bg-neutral-500 text-center text-white font-semibold py-2 px-4 rounded-md hover:bg-neutral-600 transition duration-200"
-            >
-              !정보 수정
-            </Link>
-            <button
-              onClick={handleWithdrawal}
-              className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-600 transition duration-200"
-            >
-              !회원 탈퇴
-            </button>
+          <div className="flex-1 w-1/2">
+            <Button.Warn onClick={handleWithdrawal}>!회원 탈퇴</Button.Warn>
           </div>
-        </div>
-      </div>
+        </Flex.Horizontal>
+      </Container.lg>
     </>
   );
 };

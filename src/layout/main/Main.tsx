@@ -1,5 +1,6 @@
 "use client";
 
+import Content from "@/components/Content";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -32,10 +33,8 @@ const Main = ({ children }: { children: React.ReactNode }): React.ReactNode => {
           )}
         </nav>
       </section>
-      <section id="content" className="flex-1 flex">
-        <div className="flex-1 rounded-lg bg-gray-100 flex flex-col items-center justify-center gap-y-4">
-          {children}
-        </div>
+      <section id="content" className="flex-1 flex flex-col">
+        <Content>{children}</Content>
       </section>
     </main>
   );

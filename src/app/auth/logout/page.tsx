@@ -14,7 +14,7 @@ const Logout = (): React.ReactNode => {
     router.push("/");
   }, []);
 
-  return <div>로그아웃 중입니다...</div>;
+  return;
 };
 
 export default Logout;

@@ -4,6 +4,14 @@ import { POST } from "@/scripts/api/apiClient";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterRequest } from "@/lib/user/_userService";
+import Content from "@/components/Content";
+import { Title } from "@/components/text/Title";
+import { Form } from "@/components/form/Form";
+import { Container } from "@/components/container/Container";
+import { Input } from "@/components/form/Input";
+import { Links } from "@/components/form/Links";
+import { Button } from "@/components/form/Button";
+import { ErrorBox } from "@/components/form/ErrorBox";
 
 const Signup = (): React.ReactNode => {
   const router = useRouter();
@@ -52,74 +60,30 @@ const Signup = (): React.ReactNode => {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center">회원가입</h2>
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <form className="flex flex-col gap-y-4" onSubmit={handleSubmit} noValidate>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="loginId">
-              아이디
-            </label>
-            <input
-              type="text"
-              id="id"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              placeholder="아이디를 입력하세요"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">
-              비밀번호
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              placeholder="비밀번호를 입력하세요"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="confirmPassword">
-              비밀번호 확인
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              placeholder="비밀번호를 다시 입력하세요"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="nickname">
-              닉네임
-            </label>
-            <input
-              type="text"
-              id="nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              placeholder="닉네임을 입력하세요"
-              required
-            />
-          </div>
-          <div className="h-4">{error && <p className="text-red-500 text-sm">{error}</p>}</div>
-          <button
-            type="submit"
-            className="w-full bg-neutral-500 text-white font-semibold py-2 rounded-md hover:bg-neutral-600 transition duration-200"
+      <Title.h2>회원가입</Title.h2>
+      <Container.md>
+        <Form onSubmit={handleSubmit}>
+          <Input.Text name="id" value={id} onChange={(e) => setId(e.target.value)}>
+            아이디
+          </Input.Text>
+          <Input.Password name="password" value={password} onChange={(e) => setPassword(e.target.value)}>
+            비밀번호
+          </Input.Password>
+          <Input.Password
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           >
-            회원가입
-          </button>
-        </form>
-      </div>
+            비밀번호 확인
+          </Input.Password>
+          <Input.Text name="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)}>
+            닉네임
+          </Input.Text>
+          <ErrorBox error={error} />
+          <Button.Primary>회원가입</Button.Primary>
+          <Links.Text href="/auth/login">로그인</Links.Text>
+        </Form>
+      </Container.md>
     </>
   );
 };
