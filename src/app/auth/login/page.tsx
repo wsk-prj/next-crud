@@ -1,8 +1,6 @@
 "use client";
 
 import { useAuthStore } from "@/hooks/useAuthStore";
-import { LoginRequest, LoginResponse } from "@/lib/auth/_authService";
-import { POST } from "@/scripts/api/apiClient";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -26,31 +24,20 @@ const Login = (): React.ReactNode => {
       return;
     }
 
-    const { result, error } = await POST<LoginRequest, LoginResponse>("/api/v0/auth/login", {
-      loginid: id,
-      loginpw: password,
-    } as LoginRequest);
+    try {
+      await login(id, password);
 
-    if (error) {
-      console.log(error);
-      setError(error.message);
-      return;
-    }
-
-    if (result) {
       alert("로그인에 성공했습니다.");
-      login(result.data.token, result.data.refreshToken, result.data.payload);
-
-      if (typeof window !== "undefined") {
-        const redirectPath = sessionStorage.getItem("redirectAfterLogin");
-
-        if (redirectPath) {
-          sessionStorage.removeItem("redirectAfterLogin");
-          router.push(redirectPath);
-        } else {
-          router.push("/");
-        }
+      const redirectPath = sessionStorage.getItem("redirectAfterLogin");
+      if (redirectPath) {
+        sessionStorage.removeItem("redirectAfterLogin");
+        router.push(redirectPath);
+      } else {
+        router.push("/");
       }
+    } catch (error) {
+      console.log(error);
+      return;
     }
   };
 

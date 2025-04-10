@@ -1,13 +1,12 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
-
 const instance = axios.create({
-  baseURL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 instance.interceptors.request.use((config) => {

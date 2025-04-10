@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { findUserById } from "../user/_userRepository";
 import { Auth } from "./Auth";
 import { findAuthById } from "./_authRepository";
+import cookieUtil from "@/utils/cookie/cookieUtil";
 
 export interface LoginRequest {
   loginid: Auth["loginid"];
@@ -11,8 +12,6 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
-  refreshToken: string;
   payload: Payload;
 }
 
@@ -30,7 +29,6 @@ export const login = async (request: LoginRequest): Promise<LoginResponse> => {
     throw new Error("로그인 정보가 잘못되었습니다.");
   }
 
-  // JWT 토큰 발급
   const user = await findUserById(auth.id);
 
   if (user == null) {
@@ -42,8 +40,25 @@ export const login = async (request: LoginRequest): Promise<LoginResponse> => {
     nickname: user.nickname,
     role: user.role,
   } as Payload;
+
+  // JWT 토큰 발급
   const token = TokenProvider.generateAccessToken(payload);
   const refreshToken = TokenProvider.generateRefreshToken(payload);
 
-  return { token, refreshToken, payload };
+  // 쿠키에 토큰 설정
+  cookieUtil.setCookie(
+    { key: "accessToken", value: token },
+    {
+      maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRY),
+    }
+  );
+
+  cookieUtil.setCookie(
+    { key: "refreshToken", value: refreshToken },
+    {
+      maxAge: Number(process.env.JWT_REFRESH_TOKEN_EXPIRY),
+    }
+  );
+
+  return { payload };
 };

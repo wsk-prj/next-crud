@@ -35,18 +35,18 @@ const apiClient = async <T, U>(
   }
 };
 
-export const GET = <U>(url: string): Promise<Response<U>> => {
+export const GET = <U = null>(url: string): Promise<Response<U>> => {
   return apiClient<null, U>("GET", url);
 };
 
-export const POST = <T, U = null>(url: string, data: T): Promise<Response<U>> => {
+export const POST = <T = null, U = null>(url: string, data?: T): Promise<Response<U>> => {
   return apiClient<T, U>("POST", url, data);
 };
 
-export const PATCH = <T, U = null>(url: string, data: T): Promise<Response<U>> => {
+export const PATCH = <T = null, U = null>(url: string, data?: T): Promise<Response<U>> => {
   return apiClient<T, U>("PATCH", url, data);
 };
 
-export const DELETE = <U>(url: string): Promise<Response<U>> => {
+export const DELETE = <U = null>(url: string): Promise<Response<U>> => {
   return apiClient<null, U>("DELETE", url);
 };

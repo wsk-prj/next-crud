@@ -6,7 +6,7 @@ interface Cookie {
 }
 
 interface CookieOptions {
-  maxAge?: number;
+  maxAge: number;
   path?: string;
   httpOnly?: boolean;
   secure?: boolean;
@@ -16,7 +16,13 @@ interface CookieOptions {
 const cookieUtil = {
   setCookie: (
     { key, value }: Cookie,
-    { maxAge, path = "/", httpOnly = true, secure = true, sameSite = "strict" }: CookieOptions
+    {
+      maxAge,
+      path = "/",
+      httpOnly = true,
+      secure = process.env.NODE_ENV === "production",
+      sameSite = "strict",
+    }: CookieOptions
   ) => {
     cookies().set(key, value, {
       maxAge,
@@ -27,19 +33,30 @@ const cookieUtil = {
     });
   },
 
-  getCookie: ({ key }: Cookie) => {
-    return cookies().get(key)?.value;
+  getCookie: (key: Cookie["key"]): string => {
+    const cookie = cookies().get(key)?.value;
+
+    if (cookie == null) {
+      throw new Error(`[cookieUtil] getCookie: not found`);
+    }
+
+    return cookie;
   },
 
-  getAllCookies: () => {
-    return cookies().getAll();
+  getAllCookies: (): Cookie[] => {
+    return cookies()
+      .getAll()
+      .map((cookie) => ({
+        key: cookie.name,
+        value: cookie.value,
+      }));
   },
 
-  deleteCookie: ({ key }: Cookie) => {
+  deleteCookie: (key: Cookie["key"]): void => {
     cookies().delete(key);
   },
 
-  hasCookie: ({ key }: Cookie) => {
+  hasCookie: (key: Cookie["key"]): boolean => {
     return cookies().has(key);
   },
 };

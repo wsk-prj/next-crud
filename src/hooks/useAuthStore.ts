@@ -1,55 +1,58 @@
 "use client";
 
 import { Payload } from "@/lib/tokenProvider";
+import { LoginRequest, LoginResponse } from "@/lib/auth/_authService";
+import { GET, POST } from "@/scripts/api/apiClient";
 import { create } from "zustand";
 
 interface AuthState {
   loggedIn: boolean;
-  token: string | null;
-  refreshToken: string | null;
-  userInfo: Payload | null;
-  login: (token: string, refreshToken: string, userInfo: Payload) => void;
-  logout: () => void;
+  payload: Payload | null;
+  login: (id: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   loggedIn: false,
-  token: null,
-  refreshToken: null,
-  userInfo: null,
-  login: (token: string, refreshToken: string, userInfo: Payload) => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+  payload: null,
+  login: async (id: string, password: string): Promise<void> => {
+    console.log("[useAuthStore] login");
+    const { result, error } = await POST<LoginRequest, LoginResponse>("/api/v0/auth/login", {
+      loginid: id,
+      loginpw: password,
+    } as LoginRequest);
+
+    if (error) {
+      throw new Error(error.message);
     }
-    set({ loggedIn: true, token, refreshToken, userInfo });
+
+    if (result != null) {
+      set({ loggedIn: true, payload: result.data.payload });
+    }
   },
-  logout: () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("userInfo");
+  logout: async () => {
+    console.log("[useAuthStore] logout");
+    const { result, error } = await POST("/api/v0/auth/logout");
+
+    if (error) {
+      throw new Error(error.message);
     }
-    set({ loggedIn: false, token: null, refreshToken: null, userInfo: null });
+
+    if (result != null) {
+      set({ loggedIn: false, payload: null });
+    }
   },
 }));
 
-export const initAuthStore = (): void => {
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
-    const userInfoString = localStorage.getItem("userInfo");
+export const initAuthStore = async (): Promise<void> => {
+  const { result, error } = await GET<Payload>("/api/v0/auth/payload");
+  console.log("[useAuthStore] initAuthStore: ", result);
 
-    if (token && userInfoString) {
-      try {
-        const userInfo = JSON.parse(userInfoString);
-        useAuthStore.setState({ loggedIn: true, token, refreshToken, userInfo });
-      } catch {
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userInfo");
-      }
-    }
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (result != null) {
+    useAuthStore.setState({ loggedIn: true, payload: result.data });
   }
 };

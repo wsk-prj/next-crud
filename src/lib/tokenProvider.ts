@@ -7,16 +7,29 @@ const JWT_REFRESH_TOKEN_EXPIRY: number = Number(process.env.JWT_REFRESH_TOKEN_EX
 const JWT_REFRESH_TOKEN_EXPIRY_THRESHOLD: number = Number(process.env.JWT_REFRESH_TOKEN_EXPIRY_THRESHOLD!);
 
 export interface Payload extends jwt.JwtPayload {
+  sub: jwt.JwtPayload["sub"];
   nickname: User["nickname"];
   role: User["role"];
 }
 
 const TokenProvider = {
   /**
+   * 토큰에서 페이로드 추출
+   */
+  getPayload: (token: string): Payload => {
+    const decoded = jwtUtil.decodeToken(token) as Payload;
+    return {
+      sub: decoded.sub,
+      nickname: decoded.nickname,
+      role: decoded.role,
+    };
+  },
+
+  /**
    * 액세스 토큰 발급
    */
   generateAccessToken: (payload: Payload): string => {
-    console.log(`[TokenProvider] generateAccessToken\n    ${JSON.stringify(payload)}`);
+    console.log("[TokenProvider] generateAccessToken: " + payload);
     const token = jwtUtil.generateToken(
       {
         sub: String(payload.sub),
@@ -25,7 +38,7 @@ const TokenProvider = {
       },
       { expiresIn: JWT_ACCESS_TOKEN_EXPIRY }
     );
-    console.log(`[TokenProvider] Generated Access Token\n    ${token}`);
+    console.log("[TokenProvider] Generated Access Token: " + token);
     return token;
   },
 
@@ -33,14 +46,14 @@ const TokenProvider = {
    * 리프레시 토큰 발급
    */
   generateRefreshToken: ({ sub }: Payload): string => {
-    console.log(`[TokenProvider] generateRefreshToken\n    ${JSON.stringify({ sub })}`);
+    console.log("[TokenProvider] generateRefreshToken: " + sub);
     const token = jwtUtil.generateToken(
       {
         sub: String(sub),
       },
       { expiresIn: JWT_REFRESH_TOKEN_EXPIRY }
     );
-    console.log(`[TokenProvider] Generated Refresh Token\n    ${token}`);
+    console.log("[TokenProvider] Generated Refresh Token: " + token);
     return token;
   },
 

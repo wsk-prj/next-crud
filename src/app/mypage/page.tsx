@@ -1,35 +1,18 @@
 "use client";
 
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuthStore } from "@/hooks/useAuthStore";
-import { UserProfile } from "@/lib/user/User";
-import { DELETE, GET } from "@/scripts/api/apiClient";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { DELETE } from "@/scripts/api/apiClient";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const MyPage = (): React.ReactNode => {
   const router = useRouter();
-  const { userInfo, logout } = useAuthStore();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const { payload } = useAuthStore();
+  const { logout } = useAuthStore();
+  const { userProfile } = useUserProfile();
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUserProfile = async (): Promise<void> => {
-      const { result, error } = await GET<UserProfile>(`/api/v0/user/${userInfo?.sub}`);
-
-      if (error) {
-        setError(error.message);
-        return;
-      }
-
-      if (result != null) {
-        setUser(result.data);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
 
   const handleWithdrawal = async (): Promise<void> => {
     const input = prompt("정말로 탈퇴하시겠습니까? 탈퇴 후 복구는 불가능합니다. 동의하시면 닉네임을 입력해주세요.");
@@ -38,12 +21,12 @@ const MyPage = (): React.ReactNode => {
       return;
     }
 
-    if (input !== userInfo?.nickname) {
+    if (input !== userProfile?.nickname) {
       alert("닉네임이 일치하지 않습니다.");
       return;
     }
 
-    const { result, error } = await DELETE(`/api/v0/user/${userInfo?.sub}`);
+    const { result, error } = await DELETE(`/api/v0/user/${payload?.sub}`);
 
     if (error) {
       setError(error.message);
@@ -57,12 +40,12 @@ const MyPage = (): React.ReactNode => {
     }
   };
 
-  if (!user) {
+  if (!userProfile) {
     return <div>로딩 중...</div>;
   }
 
   return (
-    <ProtectedRoute>
+    <>
       <h2 className="text-2xl font-bold text-center">마이페이지</h2>
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg mx-auto">
         <div className="flex flex-col gap-y-6">
@@ -71,11 +54,11 @@ const MyPage = (): React.ReactNode => {
             <div className="bg-gray-50 border border-gray-200 rounded-md p-4">
               <div className="flex flex-col gap-y-2">
                 <p className="text-gray-700">닉네임</p>
-                <p className="text-end font-medium">{user.nickname}</p>
+                <p className="text-end font-medium">{userProfile.nickname}</p>
                 <p className="text-gray-700">가입일</p>
-                <p className="text-end font-medium">{user.created_at.toLocaleString()}</p>
+                <p className="text-end font-medium">{userProfile.created_at.toLocaleString()}</p>
                 <p className="text-gray-700">수정일</p>
-                <p className="text-end font-medium">{user.updated_at.toLocaleString()}</p>
+                <p className="text-end font-medium">{userProfile.updated_at.toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -96,7 +79,7 @@ const MyPage = (): React.ReactNode => {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
+    </>
   );
 };
 

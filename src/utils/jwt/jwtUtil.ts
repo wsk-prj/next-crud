@@ -18,13 +18,13 @@ export const jwtUtil = {
     jwtPayload: jwt.JwtPayload,
     { expiresIn, issuer = JWT_ISSUER, audience = JWT_AUDIENCE }: JwtOptions
   ): string => {
-    console.log(`[jwtUtil] generateToken\n    ${JSON.stringify(jwtPayload)}`);
+    console.log("[jwtUtil] generateToken: " + JSON.stringify(jwtPayload));
     const token = jwt.sign(jwtPayload, JWT_SECRET, {
       expiresIn,
       issuer,
       audience,
     });
-    console.log(`[jwtUtil] Generated Token\n    ${token}`);
+    console.log("[jwtUtil] Generated Token: " + token);
     return token;
   },
 
@@ -33,12 +33,12 @@ export const jwtUtil = {
    */
   decodeToken: (token: string): jwt.JwtPayload => {
     try {
-      console.log(`[jwtUtil] decodeToken\n    ${token}`);
+      console.log("[jwtUtil] decodeToken: " + token);
       const decoded = jwt.decode(token) as jwt.JwtPayload;
-      console.log(`[jwtUtil] Decoded Token\n    ${JSON.stringify(decoded)}`);
+      console.log("[jwtUtil] Decoded Token: " + decoded);
       return decoded;
     } catch {
-      console.log(`[jwtUtil] Invalid token\n    ${token}`);
+      console.log("[jwtUtil] Invalid token: " + token);
       throw new Error("Invalid token");
     }
   },
@@ -48,14 +48,14 @@ export const jwtUtil = {
    */
   verifyTokenValid: (token: string): jwt.JwtPayload => {
     try {
-      console.log(`[jwtUtil] verifyTokenValid\n    ${token}`);
+      console.log("[jwtUtil] verifyTokenValid: " + token);
       const decoded = jwt.verify(token, JWT_SECRET, {
         ignoreExpiration: true,
       }) as jwt.JwtPayload;
-      console.log(`[jwtUtil] Verified Token\n    ${JSON.stringify(decoded)}`);
+      console.log("[jwtUtil] Verified Token: " + decoded);
       return decoded;
     } catch {
-      console.log(`[jwtUtil] Invalid token\n    ${token}`);
+      console.log("[jwtUtil] Invalid token: " + token);
       throw new Error("Invalid token");
     }
   },
@@ -64,7 +64,7 @@ export const jwtUtil = {
    * 토큰 만료 여부 확인
    */
   verifyTokenExpired: (token: string): void => {
-    console.log(`[jwtUtil] verifyTokenExpired\n    ${token}`);
+    console.log("[jwtUtil] verifyTokenExpired: " + token);
     const decoded = jwt.decode(token) as jwt.JwtPayload;
     if (!decoded || !decoded.exp) {
       throw new Error("Invalid token");
@@ -74,7 +74,7 @@ export const jwtUtil = {
     const current = Date.now();
 
     if (current >= expiry) {
-      console.log(`[jwtUtil] Token expired\n    ${token}`);
+      console.log("[jwtUtil] Token expired: " + token);
       throw new Error("Token expired");
     }
   },
