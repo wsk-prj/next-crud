@@ -20,6 +20,13 @@ export const Container = {
       </div>
     );
   },
+  xl: ({ children }: { children: React.ReactNode }) => {
+    return (
+      <div className=".container-xl bg-white p-8 rounded-lg shadow-md w-5/6 max-w-xl min-w-[28rem] flex flex-col justify-center items-center">
+        {children}
+      </div>
+    );
+  },
   full: ({ children }: { children: React.ReactNode }) => {
     return (
       <div className=".container-full bg-white p-8 rounded-lg w-full flex flex-col justify-center items-center">
