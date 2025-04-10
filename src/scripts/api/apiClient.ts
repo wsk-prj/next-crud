@@ -25,6 +25,7 @@ const apiClient = async <T, U>(
       url,
       data,
     });
+    console.log("[apiClient] response: ", response);
     return { result: response.data as ApiResponse<U>, error: null };
   } catch (error) {
     if (!(error instanceof AxiosError)) {

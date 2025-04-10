@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import User, { UserProfile } from "./User";
 import { insertAuth } from "../auth/_authRepository";
 import { deleteUserById, findUserById, insertUser, updateUserById } from "./_userRepository";
+import { InternalServerError } from "@/types/error/InternalError";
 
 export interface RegisterRequest {
   loginid: Auth["loginid"];
@@ -20,7 +21,7 @@ export const signup = async (request: RegisterRequest): Promise<void> => {
     await insertAuth({ loginid: request.loginid, loginpw: hashedPassword } as Auth);
   } catch (error) {
     console.error("[signup] Error:", error);
-    throw new Error("회원가입 중 오류가 발생했습니다.");
+    throw new InternalServerError("회원가입 중 오류가 발생했습니다.");
   }
 };
 
@@ -30,7 +31,7 @@ export const getUserProfile = async (id: User["id"]): Promise<UserProfile> => {
     return user as UserProfile;
   } catch (error) {
     console.error("[getUserProfile] Error:", error);
-    throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
+    throw new InternalServerError("사용자 정보를 가져오는 데 실패했습니다.");
   }
 };
 
@@ -39,7 +40,7 @@ export async function updateUserProfile(id: User["id"], { nickname }: Pick<User,
     await updateUserById(id, { nickname });
   } catch (error) {
     console.error("[updateUserProfile] Error:", error);
-    throw new Error("사용자 정보를 수정하는 데 실패했습니다.");
+    throw new InternalServerError("사용자 정보를 수정하는 데 실패했습니다.");
   }
 }
 
@@ -48,6 +49,6 @@ export async function withdrawUser(id: User["id"]): Promise<void> {
     await deleteUserById(id);
   } catch (error) {
     console.error("[withdrawUser] Error:", error);
-    throw new Error("회원 탈퇴 중 오류가 발생했습니다.");
+    throw new InternalServerError("회원 탈퇴 중 오류가 발생했습니다.");
   }
 }

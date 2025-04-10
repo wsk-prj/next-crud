@@ -4,14 +4,19 @@ import ResponseUtil from "@/utils/responseUtil";
 import TokenProvider, { Payload } from "@/lib/tokenProvider";
 import { jwtUtil } from "@/utils/jwt/jwtUtil";
 import cookieUtil from "@/utils/cookie/cookieUtil";
+import { withErrorHandler } from "@/app/api/errorHandler";
+import { UnauthorizedError } from "@/types/error/BadRequest";
 
-export async function GET(request: Request): Promise<NextResponse<ApiResponse<Payload | null>>> {
-  const accessToken = cookieUtil.getCookie("accessToken");
+export const GET = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse<Payload | null>>> => {
+  try {
+    const accessToken = cookieUtil.getCookie("accessToken");
 
-  jwtUtil.verifyTokenExpired(accessToken);
-  const payload = TokenProvider.getPayload(accessToken);
-
-  return ResponseUtil.success({
-    data: payload,
-  });
-}
+    jwtUtil.verifyTokenExpired(accessToken);
+    const payload = TokenProvider.getPayload(accessToken);
+    return ResponseUtil.success({
+      data: payload,
+    });
+  } catch (error) {
+    throw new UnauthorizedError("토큰이 만료되었습니다.");
+  }
+});

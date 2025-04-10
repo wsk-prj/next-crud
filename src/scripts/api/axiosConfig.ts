@@ -9,28 +9,13 @@ const instance = axios.create({
   withCredentials: true,
 });
 
-instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
 instance.interceptors.response.use(
-  (response) => {
-    console.log("[axiosConfig] response: ", response);
-    return response;
-  },
-  (error) => {
-    if (error.response.status === 401) {
-      console.log("[axiosConfig] Authorization error: ", error.response);
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("userInfo");
-      return Promise.reject(error);
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      await axios.get("/api/v0/auth/refresh", { withCredentials: true });
+      return instance(error.config);
     }
-    console.log("[axiosConfig] error: ", error.response);
     return Promise.reject(error);
   }
 );

@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { signup } from "@/lib/user/_userService";
 import { ApiResponse } from "@/types/ApiResponse";
 import ResponseUtil from "@/utils/responseUtil";
+import { withErrorHandler } from "@/app/api/errorHandler";
 
-export async function POST(request: Request): Promise<NextResponse<ApiResponse>> {
+export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
   const { loginid, loginpw, nickname } = await request.json();
 
   if (!loginid || !loginpw || !nickname) {
@@ -22,4 +23,4 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse>>
       message: "회원가입 중 오류가 발생했습니다.",
     });
   }
-}
+});
