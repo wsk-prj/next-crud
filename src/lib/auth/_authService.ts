@@ -1,4 +1,4 @@
-import { Payload } from "@/lib/_tokenProvider";
+import tokenProvider, { Payload } from "@/lib/_tokenProvider";
 import TokenProvider from "@/lib/_tokenProvider";
 import bcrypt from "bcrypt";
 import { userRepository } from "../user/_userRepository";
@@ -67,6 +67,25 @@ export const authService = {
       { key: "accessToken", value: accessToken },
       {
         maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRY),
+      }
+    );
+  },
+  updateRefreshToken: async (refreshToken: string): Promise<void> => {
+    if (!tokenProvider.shouldRefreshToken(refreshToken)) {
+      return;
+    }
+
+    const refreshTokenPayload = TokenProvider.getPayload(refreshToken);
+
+    const payload = {
+      sub: String(refreshTokenPayload.sub),
+    } as Payload;
+    const newRefreshToken = TokenProvider.generateRefreshToken(payload);
+
+    cookieUtil.setCookie(
+      { key: "refreshToken", value: newRefreshToken },
+      {
+        maxAge: Number(process.env.JWT_REFRESH_TOKEN_EXPIRY),
       }
     );
   },

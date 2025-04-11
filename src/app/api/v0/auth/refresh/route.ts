@@ -11,6 +11,7 @@ export const GET = withErrorHandler(async (request: Request): Promise<NextRespon
     const refreshToken = cookieUtil.getCookie("refreshToken");
 
     await authService.updateAccessToken(refreshToken);
+    await authService.updateRefreshToken(refreshToken);
 
     return ResponseUtil.success();
   } catch {
