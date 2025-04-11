@@ -81,11 +81,11 @@ const MyPage = (): React.ReactNode => {
           </Box.lg>
         </Flex.Vertical>
         <div className="mb-6"></div>
-        <Flex.Horizontal>
-          <div className="flex-1 w-1/2">
+        <Flex.Horizontal justify="center">
+          <div className="w-1/3">
             <Links.Button href="/mypage/edit">!정보 수정</Links.Button>
           </div>
-          <div className="flex-1 w-1/2">
+          <div className="w-1/3">
             <Button.Warn onClick={handleWithdrawal}>!회원 탈퇴</Button.Warn>
           </div>
         </Flex.Horizontal>

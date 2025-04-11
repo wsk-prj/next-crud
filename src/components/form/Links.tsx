@@ -16,7 +16,7 @@ const sizes = {
 export const Links = {
   Button: ({ children, href, size = "md" }: LinksProps) => {
     return (
-      <div className=".link text-center flex justify-center items-center">
+      <div className=".link-button text-center flex justify-center items-center">
         <Link
           className={`${sizes[size]} rounded-md bg-neutral-500 text-white font-semibold text-center flex justify-center items-center hover:bg-neutral-600 transition duration-200`}
           href={href}
@@ -28,7 +28,7 @@ export const Links = {
   },
   Text: ({ children, href }: LinksProps) => {
     return (
-      <div className=".link text-center flex justify-center items-center">
+      <div className=".link-text text-center flex justify-center items-center">
         <Link className={`text-neutral-500 hover:text-neutral-600 transition duration-200`} href={href}>
           {children}
         </Link>

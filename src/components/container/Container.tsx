@@ -22,7 +22,28 @@ export const Container = {
   },
   xl: ({ children }: { children: React.ReactNode }) => {
     return (
-      <div className=".container-xl bg-white p-8 rounded-lg shadow-md w-5/6 max-w-xl min-w-[28rem] flex flex-col justify-center items-center">
+      <div className=".container-xl bg-white p-8 rounded-lg shadow-md w-5/6 max-w-xl min-w-[24rem] flex flex-col justify-center items-center">
+        {children}
+      </div>
+    );
+  },
+  xxl: ({ children }: { children: React.ReactNode }) => {
+    return (
+      <div className=".container-xxl bg-white p-8 rounded-lg shadow-md w-5/6 max-w-2xl min-w-[28rem] flex flex-col justify-center items-center">
+        {children}
+      </div>
+    );
+  },
+  xxxl: ({ children }: { children: React.ReactNode }) => {
+    return (
+      <div className=".container-3xl bg-white p-8 rounded-lg shadow-md w-5/6 max-w-3xl min-w-[32rem] flex flex-col justify-center items-center">
+        {children}
+      </div>
+    );
+  },
+  xxxxl: ({ children }: { children: React.ReactNode }) => {
+    return (
+      <div className=".container-4xl bg-white p-8 rounded-lg shadow-md w-5/6 max-w-4xl min-w-[36rem] flex flex-col justify-center items-center">
         {children}
       </div>
     );
