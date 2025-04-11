@@ -1,16 +1,16 @@
-import { NextResponse } from "next/server";
-import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/responseUtil";
-import cookieUtil from "@/utils/cookie/cookieUtil";
-import { updateAccessToken } from "@/lib/auth/_authService";
 import { withErrorHandler } from "@/app/api/errorHandler";
+import { authService } from "@/lib/auth/_authService";
+import { ApiResponse } from "@/types/ApiResponse";
 import { UnauthorizedError } from "@/types/error/BadRequest";
+import cookieUtil from "@/utils/cookie/cookieUtil";
+import ResponseUtil from "@/utils/responseUtil";
+import { NextResponse } from "next/server";
 
 export const GET = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
   try {
     const refreshToken = cookieUtil.getCookie("refreshToken");
 
-    await updateAccessToken(refreshToken);
+    await authService.updateAccessToken(refreshToken);
 
     return ResponseUtil.success();
   } catch {

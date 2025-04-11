@@ -16,7 +16,7 @@ export const GET = withErrorHandler(async (request: Request): Promise<NextRespon
     return ResponseUtil.success({
       data: payload,
     });
-  } catch (error) {
+  } catch {
     throw new UnauthorizedError("토큰이 만료되었습니다.");
   }
 });

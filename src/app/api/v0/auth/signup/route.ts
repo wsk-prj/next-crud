@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { signup } from "@/lib/user/_userService";
+import { userService } from "@/lib/user/_userService";
 import { ApiResponse } from "@/types/ApiResponse";
 import ResponseUtil from "@/utils/responseUtil";
 import { withErrorHandler } from "@/app/api/errorHandler";
@@ -14,7 +14,7 @@ export const POST = withErrorHandler(async (request: Request): Promise<NextRespo
   }
 
   try {
-    await signup({ loginid, loginpw, nickname });
+    await userService.signup({ loginid, loginpw, nickname });
     return ResponseUtil.success({
       message: "회원가입이 완료되었습니다.",
     });

@@ -1,5 +1,5 @@
 import { withErrorHandler } from "@/app/api/errorHandler";
-import { login, LoginRequest, LoginResponse } from "@/lib/auth/_authService";
+import { authService, LoginRequest, LoginResponse } from "@/lib/auth/_authService";
 import { ApiResponse } from "@/types/ApiResponse";
 import ResponseUtil from "@/utils/responseUtil";
 import { NextResponse } from "next/server";
@@ -15,7 +15,7 @@ export const POST = withErrorHandler(
     }
 
     try {
-      await login(loginRequest);
+      await authService.login(loginRequest);
       return ResponseUtil.success({
         message: "로그인에 성공했습니다.",
       });

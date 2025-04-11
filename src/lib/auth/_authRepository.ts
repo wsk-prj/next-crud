@@ -1,30 +1,38 @@
 import { NotFoundError } from "@/types/error/BadRequest";
 import { supabase } from "../supabase/supabaseClient";
 import { Auth } from "./Auth";
-import { InternalServerError } from "@/types/error/InternalError";
-export const insertAuth = async (auth: Auth): Promise<void> => {
-  const { error } = await supabase
-    .from("auth")
-    .insert([{ id: auth.id, loginid: auth.loginid, loginpw: auth.loginpw }])
-    .select();
+import { ExternalServiceError } from "@/types/error/InternalError";
 
-  if (error) {
-    console.error("[insertAuth] Error:", error);
-    throw new InternalServerError("회원가입 중 오류가 발생했습니다.");
-  }
-};
+export const authRepository = {
+  insertAuth: async (auth: Auth): Promise<number> => {
+    const { data, error } = await supabase
+      .from("auth")
+      .insert([{ loginid: auth.loginid, loginpw: auth.loginpw }])
+      .select();
 
-export const findAuthById = async (loginid: Auth["loginid"]): Promise<Auth | null> => {
-  const { data, error } = await supabase.from("auth").select("*").eq("loginid", loginid);
+    if (error) {
+      console.error("[insertAuth] Error:", error);
+      throw new ExternalServiceError("회원가입 중 오류가 발생했습니다.");
+    }
 
-  if (error) {
-    console.error("[findAuthById] Error:", error);
-    throw new InternalServerError("회원 정보를 가져오는 중 오류가 발생했습니다.");
-  }
+    if (data?.[0] == null) {
+      throw new NotFoundError("로그인 정보가 존재하지 않습니다.");
+    }
 
-  if (data == null || data.length === 0) {
-    throw new NotFoundError("로그인 정보가 존재하지 않습니다.");
-  }
+    return data[0].id;
+  },
+  findAuthById: async (loginid: Auth["loginid"]): Promise<Auth> => {
+    const { data, error } = await supabase.from("auth").select("*").eq("loginid", loginid);
 
-  return data[0];
+    if (error) {
+      console.error("[findAuthById] Error:", error);
+      throw new ExternalServiceError("회원 정보를 가져오는 중 오류가 발생했습니다.");
+    }
+
+    if (data?.[0] == null) {
+      throw new NotFoundError("로그인 정보가 존재하지 않습니다.");
+    }
+
+    return data[0];
+  },
 };

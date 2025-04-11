@@ -1,5 +1,5 @@
 import User, { UserProfile } from "@/lib/user/User";
-import { getUserProfile, updateUserProfile, withdrawUser } from "@/lib/user/_userService";
+import { userService } from "@/lib/user/_userService";
 import { ApiResponse } from "@/types/ApiResponse";
 import ResponseUtil from "@/utils/responseUtil";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,7 +16,7 @@ export const GET = withErrorHandler(
       });
     }
 
-    const user = await getUserProfile(Number(id));
+    const user = await userService.getUserProfile(Number(id));
 
     return ResponseUtil.success({
       data: user,
@@ -43,7 +43,7 @@ export const PATCH = withErrorHandler(
       });
     }
 
-    await updateUserProfile(Number(id), { nickname });
+    await userService.updateUserProfile(Number(id), { nickname });
 
     return ResponseUtil.success();
   }
@@ -59,7 +59,7 @@ export const DELETE = withErrorHandler(async (request: NextRequest): Promise<Nex
     });
   }
 
-  await withdrawUser(Number(id));
+  await userService.withdrawUser(Number(id));
 
   return ResponseUtil.success();
 });
