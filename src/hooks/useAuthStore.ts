@@ -1,6 +1,6 @@
 "use client";
 
-import { Payload } from "@/lib/tokenProvider";
+import { Payload } from "@/lib/_tokenProvider";
 import { LoginRequest, LoginResponse } from "@/lib/auth/_authService";
 import { GET, POST } from "@/scripts/api/apiClient";
 import { create } from "zustand";

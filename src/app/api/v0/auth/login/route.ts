@@ -1,7 +1,7 @@
 import { withErrorHandler } from "@/app/api/errorHandler";
 import { authService, LoginRequest, LoginResponse } from "@/lib/auth/_authService";
 import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/responseUtil";
+import ResponseUtil from "@/utils/_responseUtil";
 import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(

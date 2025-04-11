@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { userService } from "@/lib/user/_userService";
 import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/responseUtil";
+import ResponseUtil from "@/utils/_responseUtil";
 import { withErrorHandler } from "@/app/api/errorHandler";
 
 export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {

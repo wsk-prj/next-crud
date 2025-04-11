@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "@/lib/user/User";
-import { jwtUtil } from "../utils/jwt/jwtUtil";
+import { jwtUtil } from "../utils/jwt/_jwtUtil";
 
 const JWT_ACCESS_TOKEN_EXPIRY: number = Number(process.env.JWT_ACCESS_TOKEN_EXPIRY!);
 const JWT_REFRESH_TOKEN_EXPIRY: number = Number(process.env.JWT_REFRESH_TOKEN_EXPIRY!);
@@ -12,7 +12,7 @@ export interface Payload extends jwt.JwtPayload {
   role: User["role"];
 }
 
-const TokenProvider = {
+const tokenProvider = {
   /**
    * 토큰에서 페이로드 추출
    */
@@ -61,9 +61,9 @@ const TokenProvider = {
    * 리프레시 토큰 갱신
    */
   updateRefreshToken: (token: string): string => {
-    if (TokenProvider.shouldRefreshToken(token)) {
+    if (tokenProvider.shouldRefreshToken(token)) {
       const payload = jwtUtil.decodeToken(token) as Payload;
-      return TokenProvider.generateRefreshToken(payload);
+      return tokenProvider.generateRefreshToken(payload);
     }
     return token;
   },
@@ -84,4 +84,4 @@ const TokenProvider = {
   },
 };
 
-export default TokenProvider;
+export default tokenProvider;

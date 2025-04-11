@@ -1,6 +1,5 @@
-import { ApiError } from "@/types/error/ApiError";
 import { NextRequest, NextResponse } from "next/server";
-import ResponseUtil from "@/utils/responseUtil";
+import ResponseUtil from "@/utils/_responseUtil";
 import { BadRequestError } from "@/types/error/BadRequest";
 import { InternalServerError } from "@/types/error/InternalError";
 

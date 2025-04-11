@@ -1,9 +1,9 @@
-import { Payload } from "@/lib/tokenProvider";
-import TokenProvider from "@/lib/tokenProvider";
+import { Payload } from "@/lib/_tokenProvider";
+import TokenProvider from "@/lib/_tokenProvider";
 import bcrypt from "bcrypt";
 import { userRepository } from "../user/_userRepository";
 import { Auth } from "./Auth";
-import cookieUtil from "@/utils/cookie/cookieUtil";
+import cookieUtil from "@/utils/cookie/_cookieUtil";
 import { BadRequestError } from "@/types/error/BadRequest";
 import { authRepository } from "./_authRepository";
 

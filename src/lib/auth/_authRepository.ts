@@ -1,5 +1,5 @@
 import { NotFoundError } from "@/types/error/BadRequest";
-import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../supabase/_supabaseClient";
 import { Auth } from "./Auth";
 import { ExternalServiceError } from "@/types/error/InternalError";
 

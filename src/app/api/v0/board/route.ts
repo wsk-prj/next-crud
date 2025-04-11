@@ -1,10 +1,9 @@
 import { boardService } from "@/lib/board/_boardService";
 import { Board } from "@/lib/board/Board";
-import cookieUtil from "@/utils/cookie/cookieUtil";
 import { User } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { withErrorHandler } from "../../errorHandler";
-import responseUtil from "@/utils/responseUtil";
+import responseUtil from "@/utils/_responseUtil";
 import { ApiResponse } from "@/types/ApiResponse";
 
 export interface BoardRequest {

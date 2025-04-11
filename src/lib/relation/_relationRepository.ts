@@ -1,6 +1,6 @@
 import { InternalServerError } from "@/types/error/InternalError";
 import { Auth } from "../auth/Auth";
-import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../supabase/_supabaseClient";
 import User from "../user/User";
 
 export const relationRepository = {

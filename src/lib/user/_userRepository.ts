@@ -1,5 +1,5 @@
-import { ExternalServiceError, InternalServerError } from "@/types/error/InternalError";
-import { supabase } from "../supabase/supabaseClient";
+import { ExternalServiceError } from "@/types/error/InternalError";
+import { supabase } from "../supabase/_supabaseClient";
 import User from "./User";
 import { NotFoundError } from "@/types/error/BadRequest";
 

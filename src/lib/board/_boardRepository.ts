@@ -1,5 +1,5 @@
 import { Board } from "@/lib/board/Board";
-import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../supabase/_supabaseClient";
 import { InternalServerError } from "@/types/error/InternalError";
 import { BoardRequest } from "@/app/api/v0/board/route";
 

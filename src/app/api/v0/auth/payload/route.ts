@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/responseUtil";
-import TokenProvider, { Payload } from "@/lib/tokenProvider";
-import { jwtUtil } from "@/utils/jwt/jwtUtil";
-import cookieUtil from "@/utils/cookie/cookieUtil";
+import ResponseUtil from "@/utils/_responseUtil";
+import TokenProvider, { Payload } from "@/lib/_tokenProvider";
+import { jwtUtil } from "@/utils/jwt/_jwtUtil";
+import cookieUtil from "@/utils/cookie/_cookieUtil";
 import { withErrorHandler } from "@/app/api/errorHandler";
 import { UnauthorizedError } from "@/types/error/BadRequest";
 

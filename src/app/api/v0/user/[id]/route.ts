@@ -1,7 +1,7 @@
 import User, { UserProfile } from "@/lib/user/User";
 import { userService } from "@/lib/user/_userService";
 import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/responseUtil";
+import ResponseUtil from "@/utils/_responseUtil";
 import { NextRequest, NextResponse } from "next/server";
 import { withErrorHandler } from "@/app/api/errorHandler";
 

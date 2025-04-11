@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/responseUtil";
-import cookieUtil from "@/utils/cookie/cookieUtil";
+import ResponseUtil from "@/utils/_responseUtil";
+import cookieUtil from "@/utils/cookie/_cookieUtil";
 import { withErrorHandler } from "@/app/api/errorHandler";
 
 export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
