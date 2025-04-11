@@ -31,11 +31,13 @@ export const boardRepository = {
     return data;
   },
   countAllBoards: async (): Promise<number> => {
-    const { data, error } = await supabase.from("board").select("*", { count: "exact" });
+    const { count, error } = await supabase.from("board").select("*", { count: "exact", head: true });
+
     if (error) {
       throw new ExternalServiceError(error.message);
     }
-    return data[0].count;
+
+    return count || 0;
   },
   updateBoard: async (id: Board["id"], board: BoardRequest): Promise<number> => {
     const { data, error } = await supabase.from("board").update(board).eq("id", id).select();

@@ -15,7 +15,7 @@ export const Container = {
   },
   lg: ({ children }: { children: React.ReactNode }) => {
     return (
-      <div className=".container-lg bg-white p-8 rounded-lg shadow-md w-2/3 max-w-lg min-w-96 flex flex-col justify-center items-center">
+      <div className=".container-lg bg-white p-8 rounded-lg shadow-md w-2/3 max-w-lg min-w-96 min-h-80 flex flex-col justify-center items-center">
         {children}
       </div>
     );
@@ -36,7 +36,7 @@ export const Container = {
   },
   xxxl: ({ children }: { children: React.ReactNode }) => {
     return (
-      <div className=".container-3xl bg-white p-8 rounded-lg shadow-md w-5/6 max-w-3xl min-w-[32rem] flex flex-col justify-center items-center">
+      <div className=".container-3xl bg-white p-8 rounded-lg shadow-md w-5/6 max-w-3xl min-w-[32rem] min-h-[36rem] flex flex-col justify-center items-center">
         {children}
       </div>
     );

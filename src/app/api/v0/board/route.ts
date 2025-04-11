@@ -39,7 +39,6 @@ export const GET = withErrorHandler(
     const size = Number(requestParams.get("size") || "10");
 
     const pagedResponse: Paged<BoardResponse> = await boardService.findAllBoards(page, size);
-
     return responseUtil.success({ data: pagedResponse });
   }
 );

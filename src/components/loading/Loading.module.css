@@ -1,0 +1,36 @@
+.dotsContainer {
+  display: inline-block;
+  min-width: 60px;
+  height: 40px;
+}
+
+.dot {
+  opacity: 0.3;
+  display: inline-block;
+  font-size: 3rem; /* 크기 */
+  font-weight: bold;
+  line-height: 1;
+  margin: 0 3px; /* 점 사이 간격 */
+}
+
+.activeDot {
+  display: inline-block;
+  font-size: 3rem; /* 크기 */
+  font-weight: bold;
+  line-height: 1;
+  opacity: 1;
+  margin: 0 3px; /* 점 사이 간격 */
+  animation: bounce 0.3s ease-in-out;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* 튀어오르는 높이 조절 */
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

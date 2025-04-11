@@ -1,5 +1,5 @@
 export interface Paged<T> {
-  data: T[];
+  contents: T[];
   pagination: Pagination;
 }
 

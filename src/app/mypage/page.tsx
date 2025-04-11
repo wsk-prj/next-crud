@@ -1,7 +1,6 @@
 "use client";
 
 import { Container } from "@/components/container/Container";
-import Content from "@/components/Content";
 import { Button } from "@/components/form/Button";
 import { Links } from "@/components/form/Links";
 import { Text } from "@/components/text/Text";
@@ -11,9 +10,10 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { DELETE } from "@/scripts/api/apiClient";
 import { dateTimeUtil } from "@/utils/date/dateTimeUtil";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box } from "../../components/container/Box";
 import { Flex } from "../../components/container/Flex";
+import Loading from "../../components/loading/Loading";
 
 const MyPage = (): React.ReactNode => {
   const router = useRouter();
@@ -48,47 +48,49 @@ const MyPage = (): React.ReactNode => {
     }
   };
 
-  if (!userProfile) {
-    return <div>로딩 중...</div>;
-  }
-
   return (
     <>
       <Title.h2>마이페이지</Title.h2>
       <Container.lg>
-        <Flex.Vertical>
-          <Box.lg>
+        {!userProfile ? (
+          <Loading />
+        ) : (
+          <>
             <Flex.Vertical>
-              <div className="mb-2">
-                <Text.md>닉네임</Text.md>
-                <Text.md weight="semibold" align="right">
-                  {userProfile.nickname}
-                </Text.md>
-              </div>
-              <div className="mb-2">
-                <Text.md>가입일</Text.md>
-                <Text.md weight="semibold" align="right">
-                  {dateTimeUtil.y4m2d2(userProfile.created_at)}
-                </Text.md>
-              </div>
-              <div className="mb-2">
-                <Text.md>수정일</Text.md>
-                <Text.md weight="semibold" align="right">
-                  {dateTimeUtil.y4m2d2(userProfile.updated_at)}
-                </Text.md>
-              </div>
+              <Box.lg>
+                <Flex.Vertical>
+                  <div className="mb-2">
+                    <Text.md>닉네임</Text.md>
+                    <Text.md weight="semibold" align="right">
+                      {userProfile.nickname}
+                    </Text.md>
+                  </div>
+                  <div className="mb-2">
+                    <Text.md>가입일</Text.md>
+                    <Text.md weight="semibold" align="right">
+                      {dateTimeUtil.y4m2d2(userProfile.created_at)}
+                    </Text.md>
+                  </div>
+                  <div className="mb-2">
+                    <Text.md>수정일</Text.md>
+                    <Text.md weight="semibold" align="right">
+                      {dateTimeUtil.y4m2d2(userProfile.updated_at)}
+                    </Text.md>
+                  </div>
+                </Flex.Vertical>
+              </Box.lg>
             </Flex.Vertical>
-          </Box.lg>
-        </Flex.Vertical>
-        <div className="mb-6"></div>
-        <Flex.Horizontal justify="center">
-          <div className="w-1/3">
-            <Links.Button href="/mypage/edit">!정보 수정</Links.Button>
-          </div>
-          <div className="w-1/3">
-            <Button.Warn onClick={handleWithdrawal}>!회원 탈퇴</Button.Warn>
-          </div>
-        </Flex.Horizontal>
+            <div className="mb-6"></div>
+            <Flex.Horizontal justify="center">
+              <div className="w-1/3">
+                <Links.Button href="/mypage/edit">!정보 수정</Links.Button>
+              </div>
+              <div className="w-1/3">
+                <Button.Warn onClick={handleWithdrawal}>!회원 탈퇴</Button.Warn>
+              </div>
+            </Flex.Horizontal>
+          </>
+        )}
       </Container.lg>
     </>
   );

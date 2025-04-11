@@ -17,7 +17,7 @@ export const boardService = {
     const totalItems = await boardRepository.countAllBoards();
 
     const pagedResponse: Paged<BoardResponse> = {
-      data: foundBoards,
+      contents: foundBoards,
       pagination: {
         pageSize: size,
         currentPage: page,
