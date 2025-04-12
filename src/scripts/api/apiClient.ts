@@ -1,5 +1,5 @@
 import instance from "./axiosConfig";
-import { ApiResponse } from "../../types/ApiResponse";
+import { ApiResponse } from "../../types/api/ApiResponse";
 import { AxiosError } from "axios";
 
 interface Response<T> {
@@ -25,7 +25,6 @@ const apiClient = async <T, U>(
       url,
       data,
     });
-    console.log("[apiClient] response: ", response);
     return { result: response.data as ApiResponse<U>, error: null };
   } catch (error) {
     if (!(error instanceof AxiosError)) {

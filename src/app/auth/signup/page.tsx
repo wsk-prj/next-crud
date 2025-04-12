@@ -1,17 +1,16 @@
 "use client";
 
-import { POST } from "@/scripts/api/apiClient";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { RegisterRequest } from "@/lib/user/_userService";
-import Content from "@/components/Content";
-import { Title } from "@/components/text/Title";
-import { Form } from "@/components/form/Form";
+import { RegisterRequest } from "@/app/api/service/user/_userService";
+import { Links } from "@/components/common/Links";
 import { Container } from "@/components/container/Container";
-import { Input } from "@/components/form/Input";
-import { Links } from "@/components/form/Links";
 import { Button } from "@/components/form/Button";
 import { ErrorBox } from "@/components/form/ErrorBox";
+import { Form } from "@/components/form/Form";
+import { Input } from "@/components/form/Input";
+import { Title } from "@/components/text/Title";
+import { POST } from "@/scripts/api/apiClient";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Signup = (): React.ReactNode => {
   const router = useRouter();

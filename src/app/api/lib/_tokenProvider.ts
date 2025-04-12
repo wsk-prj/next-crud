@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "@/lib/user/User";
+import User from "@/app/api/service/user/User";
 import { jwtUtil } from "../utils/jwt/_jwtUtil";
 
 const JWT_ACCESS_TOKEN_EXPIRY: number = Number(process.env.JWT_ACCESS_TOKEN_EXPIRY!);
@@ -29,7 +29,6 @@ const tokenProvider = {
    * 액세스 토큰 발급
    */
   generateAccessToken: (payload: Payload): string => {
-    console.log("[TokenProvider] generateAccessToken: " + payload);
     const token = jwtUtil.generateToken(
       {
         sub: String(payload.sub),
@@ -38,7 +37,6 @@ const tokenProvider = {
       },
       { expiresIn: JWT_ACCESS_TOKEN_EXPIRY }
     );
-    console.log("[TokenProvider] Generated Access Token: " + token);
     return token;
   },
 
@@ -46,14 +44,12 @@ const tokenProvider = {
    * 리프레시 토큰 발급
    */
   generateRefreshToken: ({ sub }: Payload): string => {
-    console.log("[TokenProvider] generateRefreshToken: " + sub);
     const token = jwtUtil.generateToken(
       {
         sub: String(sub),
       },
       { expiresIn: JWT_REFRESH_TOKEN_EXPIRY }
     );
-    console.log("[TokenProvider] Generated Refresh Token: " + token);
     return token;
   },
 

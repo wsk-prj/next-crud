@@ -1,11 +1,11 @@
-import { boardService } from "@/lib/board/_boardService";
-import { Board } from "@/lib/board/Board";
-import { User } from "@supabase/supabase-js";
+import responseUtil from "@/app/api/_responseUtil";
+import { Board } from "@/app/api/service/board/Board";
+import User from "@/app/api/service/user/User";
+import { boardService } from "@/app/api/service/board/_boardService";
+import { ApiResponse } from "@/types/api/ApiResponse";
+import { Paged } from "@/types/common/paged/Paged";
 import { NextRequest, NextResponse } from "next/server";
-import { withErrorHandler } from "../../errorHandler";
-import responseUtil from "@/utils/_responseUtil";
-import { ApiResponse } from "@/types/ApiResponse";
-import { Paged } from "@/lib/common/paged/Paged";
+import { withErrorHandler } from "../../_errorHandler";
 
 export interface BoardRequest {
   user_id: User["id"];

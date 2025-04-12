@@ -4,6 +4,7 @@ type LinksProps = {
   children: React.ReactNode;
   href: string;
   size?: "sm" | "md" | "lg" | "xl";
+  color?: "primary" | "secondary" | "danger";
 };
 
 const sizes = {
@@ -13,12 +14,18 @@ const sizes = {
   xl: "w-48 h-14",
 };
 
+const colors = {
+  primary: "bg-neutral-700 hover:bg-neutral-800",
+  secondary: "bg-neutral-500 hover:bg-neutral-600",
+  danger: "bg-red-500 hover:bg-red-600",
+};
+
 export const Links = {
-  Button: ({ children, href, size = "md" }: LinksProps) => {
+  Button: ({ children, href, size = "md", color = "primary" }: LinksProps) => {
     return (
       <div className=".link-button text-center flex justify-center items-center">
         <Link
-          className={`${sizes[size]} rounded-md bg-neutral-500 text-white font-semibold text-center flex justify-center items-center hover:bg-neutral-600 transition duration-200`}
+          className={`${sizes[size]} rounded-md ${colors[color]} text-white font-semibold text-center flex justify-center items-center hover:bg-neutral-600 transition duration-200`}
           href={href}
         >
           {children}

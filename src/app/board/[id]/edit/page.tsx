@@ -1,0 +1,109 @@
+"use client";
+
+import { BoardRequest, BoardResponse } from "@/app/api/v0/board/route";
+import { Links } from "@/components/common/Links";
+import { Container } from "@/components/container/Container";
+import { Button } from "@/components/form/Button";
+import { ErrorBox } from "@/components/form/ErrorBox";
+import { Form } from "@/components/form/Form";
+import { Input } from "@/components/form/Input";
+import Loading from "@/components/animations/Loading";
+import { Title } from "@/components/text/Title";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { GET, PATCH } from "@/scripts/api/apiClient";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
+  const router = useRouter();
+  const { userProfile } = useUserProfile();
+  const [board, setBoard] = useState<BoardResponse>();
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchBoard = async (): Promise<void> => {
+      const { result, error } = await GET<BoardResponse>(`/api/v0/board/${params.id}`);
+
+      if (error) {
+        setError(error.message);
+      }
+
+      if (result) {
+        setBoard(result.data);
+      }
+    };
+    fetchBoard();
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [board]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+
+    if (!userProfile?.id) {
+      setError("로그인 후 이용해주세요.");
+      return;
+    }
+
+    if (!board?.title) {
+      setError("제목을 입력해주세요.");
+      return;
+    }
+
+    if (!board?.content) {
+      setError("내용을 입력해주세요.");
+      return;
+    }
+
+    const { result, error } = await PATCH<BoardRequest, number>(`/api/v0/board/${params.id}`, {
+      user_id: userProfile.id,
+      title: board.title,
+      content: board.content,
+    });
+
+    if (error) {
+      setError(error.message);
+    }
+
+    if (result) {
+      alert("게시글이 수정되었습니다.");
+      router.push(`/board/${result.data}`);
+    }
+  };
+
+  return (
+    <>
+      <Title.h2>게시글 수정</Title.h2>
+      <Container.xxxl>
+        {isLoading || !board ? (
+          <Loading />
+        ) : (
+          <Form onSubmit={handleSubmit}>
+            <Input.Text
+              name="title"
+              value={board.title}
+              onChange={(e) => setBoard({ ...board, title: e.target.value })}
+            >
+              제목
+            </Input.Text>
+            <Input.Textarea
+              name="content"
+              value={board.content}
+              onChange={(e) => setBoard({ ...board, content: e.target.value })}
+            >
+              내용
+            </Input.Textarea>
+            <ErrorBox error={error} />
+            <Button.Primary>수정</Button.Primary>
+            <Links.Text href={`/board/${params.id}`}>취소</Links.Text>
+          </Form>
+        )}
+      </Container.xxxl>
+    </>
+  );
+};
+
+export default BoardEdit;

@@ -1,7 +1,6 @@
 "use client";
 
 import { Container } from "@/components/container/Container";
-import Content from "@/components/Content";
 import { Title } from "@/components/text/Title";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useRouter } from "next/navigation";
@@ -10,11 +9,13 @@ import { Button } from "../../../components/form/Button";
 import { ErrorBox } from "../../../components/form/ErrorBox";
 import { Form } from "../../../components/form/Form";
 import { Input } from "../../../components/form/Input";
-import { Links } from "@/components/form/Links";
+import { Links } from "@/components/common/Links";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 const Login = (): React.ReactNode => {
   const router = useRouter();
   const { login } = useAuthStore();
+  const { fetchUserProfile } = useUserProfile();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -37,6 +38,7 @@ const Login = (): React.ReactNode => {
 
     try {
       await login(id, password);
+      await fetchUserProfile();
 
       alert("로그인에 성공했습니다.");
       const redirectPath = sessionStorage.getItem("redirectAfterLogin");
@@ -46,8 +48,7 @@ const Login = (): React.ReactNode => {
       } else {
         router.push("/");
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
       return;
     }
   };

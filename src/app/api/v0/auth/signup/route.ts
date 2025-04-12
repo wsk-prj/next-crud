@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { userService } from "@/lib/user/_userService";
-import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/_responseUtil";
-import { withErrorHandler } from "@/app/api/errorHandler";
+import { userService } from "@/app/api/service/user/_userService";
+import { ApiResponse } from "@/types/api/ApiResponse";
+import ResponseUtil from "@/app/api/_responseUtil";
+import { withErrorHandler } from "@/app/api/_errorHandler";
 
 export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
   const { loginid, loginpw, nickname } = await request.json();

@@ -28,7 +28,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px); /* 튀어오르는 높이 조절 */
+    transform: translateY(-8px); /* 튀어오르는 높이 조절 */
   }
   100% {
     transform: translateY(0);

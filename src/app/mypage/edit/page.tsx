@@ -3,14 +3,13 @@
 import { useState } from "react";
 import { PATCH } from "@/scripts/api/apiClient";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { Title } from "@/components/text/Title";
 import { Container } from "@/components/container/Container";
 import { Form } from "@/components/form/Form";
 import { Input } from "@/components/form/Input";
 import { Button } from "@/components/form/Button";
-import { Links } from "@/components/form/Links";
+import { Links } from "@/components/common/Links";
 import { ErrorBox } from "@/components/form/ErrorBox";
 
 const MyPageEdit = (): React.ReactNode => {

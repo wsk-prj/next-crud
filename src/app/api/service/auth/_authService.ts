@@ -1,10 +1,10 @@
-import tokenProvider, { Payload } from "@/lib/_tokenProvider";
-import TokenProvider from "@/lib/_tokenProvider";
+import tokenProvider, { Payload } from "@/app/api/lib/_tokenProvider";
+import TokenProvider from "@/app/api/lib/_tokenProvider";
 import bcrypt from "bcrypt";
 import { userRepository } from "../user/_userRepository";
 import { Auth } from "./Auth";
-import cookieUtil from "@/utils/cookie/_cookieUtil";
-import { BadRequestError } from "@/types/error/BadRequest";
+import cookieUtil from "@/app/api/utils/cookie/_cookieUtil";
+import { BadRequestError } from "@/types/api/error/BadRequest";
 import { authRepository } from "./_authRepository";
 
 export interface LoginRequest {

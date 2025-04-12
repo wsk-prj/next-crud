@@ -8,6 +8,7 @@ export default interface User {
 }
 
 export interface UserProfile extends User {
+  id: User["id"];
   nickname: User["nickname"];
   role: User["role"];
   created_at: User["created_at"];

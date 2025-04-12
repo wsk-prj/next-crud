@@ -1,5 +1,5 @@
 import { Flex } from "@/components/container/Flex";
-import { Pagination } from "@/lib/common/paged/Paged";
+import { Pagination } from "@/types/common/paged/Paged";
 import { useEffect, useState } from "react";
 
 type PaginationProps = {

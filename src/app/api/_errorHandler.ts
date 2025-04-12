@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { NextRequest, NextResponse } from "next/server";
-import ResponseUtil from "@/utils/_responseUtil";
-import { BadRequestError } from "@/types/error/BadRequest";
-import { InternalServerError } from "@/types/error/InternalError";
+import ResponseUtil from "@/app/api/_responseUtil";
+import { BadRequestError } from "@/types/api/error/BadRequest";
+import { InternalServerError } from "@/types/api/error/InternalError";
 
 type RouteHandler = (req: NextRequest, ...args: any[]) => Promise<NextResponse>;
 

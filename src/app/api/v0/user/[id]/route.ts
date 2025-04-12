@@ -1,28 +1,9 @@
-import User, { UserProfile } from "@/lib/user/User";
-import { userService } from "@/lib/user/_userService";
-import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/_responseUtil";
+import User, { UserProfile } from "@/app/api/service/user/User";
+import { userService } from "@/app/api/service/user/_userService";
+import { ApiResponse } from "@/types/api/ApiResponse";
+import ResponseUtil from "@/app/api/_responseUtil";
 import { NextRequest, NextResponse } from "next/server";
-import { withErrorHandler } from "@/app/api/errorHandler";
-
-export const GET = withErrorHandler(
-  async (request: NextRequest): Promise<NextResponse<ApiResponse<UserProfile | null>>> => {
-    const { pathname } = request.nextUrl;
-    const id: User["id"] = Number(pathname.split("/").pop());
-
-    if (!id) {
-      return ResponseUtil.rejected({
-        message: "잘못된 요청입니다.",
-      });
-    }
-
-    const user = await userService.getUserProfile(Number(id));
-
-    return ResponseUtil.success({
-      data: user,
-    });
-  }
-);
+import { withErrorHandler } from "@/app/api/_errorHandler";
 
 export const PATCH = withErrorHandler(
   async (request: NextRequest): Promise<NextResponse<ApiResponse<UserProfile | null>>> => {

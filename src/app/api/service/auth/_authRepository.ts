@@ -1,7 +1,7 @@
-import { NotFoundError } from "@/types/error/BadRequest";
-import { supabase } from "../supabase/_supabaseClient";
+import { NotFoundError } from "@/types/api/error/BadRequest";
+import { supabase } from "../../lib/supabase/_supabaseClient";
 import { Auth } from "./Auth";
-import { ExternalServiceError } from "@/types/error/InternalError";
+import { ExternalServiceError } from "@/types/api/error/InternalError";
 
 export const authRepository = {
   insertAuth: async (auth: Auth): Promise<number> => {

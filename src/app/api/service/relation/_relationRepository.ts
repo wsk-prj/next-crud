@@ -1,12 +1,10 @@
-import { InternalServerError } from "@/types/error/InternalError";
+import { InternalServerError } from "@/types/api/error/InternalError";
 import { Auth } from "../auth/Auth";
-import { supabase } from "../supabase/_supabaseClient";
+import { supabase } from "../../lib/supabase/_supabaseClient";
 import User from "../user/User";
 
 export const relationRepository = {
   insertUserAndAuth: async ({ user_id, auth_id }: { user_id: User["id"]; auth_id: Auth["id"] }): Promise<void> => {
-    console.log("[insertUserAndAuth] user_id:", user_id);
-    console.log("[insertUserAndAuth] auth_id:", auth_id);
     const { error } = await supabase.from("r_user_auth").insert({ user_id, auth_id }).select();
 
     if (error) {

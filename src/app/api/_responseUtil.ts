@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/types/ApiResponse";
+import { ApiResponse } from "@/types/api/ApiResponse";
 import { NextResponse } from "next/server";
 
 const now = (): string => new Date().toISOString();

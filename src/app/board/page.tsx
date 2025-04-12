@@ -2,17 +2,17 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { GET } from "@/scripts/api/apiClient";
-import { Paged, Pagination } from "@/lib/common/paged/Paged";
-import { Board } from "@/lib/board/Board";
+import { Paged, Pagination } from "@/types/common/paged/Paged";
+import { Board } from "@/app/api/service/board/Board";
 import { dateTimeUtil } from "@/utils/date/dateTimeUtil";
 import { Title } from "@/components/text/Title";
-import { Table } from "../../components/container/Table";
-import { Links } from "@/components/form/Links";
+import { Table } from "@/components/container/Table";
+import { Links } from "@/components/common/Links";
 import { Flex } from "@/components/container/Flex";
 import { Text } from "@/components/text/Text";
 import { Container } from "@/components/container/Container";
-import PaginationComponent from "../../components/Pagination";
-import Loading from "../../components/loading/Loading";
+import PaginationComponent from "@/components/common/Pagination";
+import Loading from "@/components/animations/Loading";
 
 const BoardPage = (): React.ReactNode => {
   const [boardList, setBoardList] = useState<Board[]>([]);

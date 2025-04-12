@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { ApiResponse } from "@/types/ApiResponse";
-import ResponseUtil from "@/utils/_responseUtil";
-import cookieUtil from "@/utils/cookie/_cookieUtil";
-import { withErrorHandler } from "@/app/api/errorHandler";
+import { ApiResponse } from "@/types/api/ApiResponse";
+import ResponseUtil from "@/app/api/_responseUtil";
+import cookieUtil from "@/app/api/utils/cookie/_cookieUtil";
+import { withErrorHandler } from "@/app/api/_errorHandler";
 
 export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
   cookieUtil.deleteCookie("accessToken");

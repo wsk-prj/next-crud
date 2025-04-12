@@ -1,7 +1,7 @@
-import { ExternalServiceError } from "@/types/error/InternalError";
-import { supabase } from "../supabase/_supabaseClient";
+import { ExternalServiceError } from "@/types/api/error/InternalError";
+import { supabase } from "../../lib/supabase/_supabaseClient";
 import User from "./User";
-import { NotFoundError } from "@/types/error/BadRequest";
+import { NotFoundError } from "@/types/api/error/BadRequest";
 
 export const userRepository = {
   insertUser: async (user: User): Promise<number> => {
@@ -33,7 +33,6 @@ export const userRepository = {
       throw new NotFoundError("회원 정보가 존재하지 않습니다.");
     }
 
-    console.log("[findUserById] data:", data);
     return data[0];
   },
   updateUserById: async (id: User["id"], { nickname }: Pick<User, "nickname">): Promise<void> => {

@@ -3,16 +3,28 @@
 import { useEffect, useState } from "react";
 import styles from "./Loading.module.css";
 
-const Loading: React.FC = () => {
+const Loading = ({ delay = 150 }: { delay?: number }): React.ReactNode => {
   const [dots, setDots] = useState<number>(0);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
+    const visibilityTimer = setTimeout(() => {
+      setIsVisible(true);
+    }, delay);
+
     const interval = setInterval(() => {
       setDots((prevDots) => (prevDots + 1) % 4);
     }, 333);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(visibilityTimer);
+      clearInterval(interval);
+    };
   }, []);
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <div className="text-center py-4">

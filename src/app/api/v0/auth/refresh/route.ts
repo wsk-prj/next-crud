@@ -1,12 +1,12 @@
-import { withErrorHandler } from "@/app/api/errorHandler";
-import { authService } from "@/lib/auth/_authService";
-import { ApiResponse } from "@/types/ApiResponse";
-import { UnauthorizedError } from "@/types/error/BadRequest";
-import cookieUtil from "@/utils/cookie/_cookieUtil";
-import ResponseUtil from "@/utils/_responseUtil";
+import { withErrorHandler } from "@/app/api/_errorHandler";
+import ResponseUtil from "@/app/api/_responseUtil";
+import { authService } from "@/app/api/service/auth/_authService";
+import cookieUtil from "@/app/api/utils/cookie/_cookieUtil";
+import { ApiResponse } from "@/types/api/ApiResponse";
+import { UnauthorizedError } from "@/types/api/error/BadRequest";
 import { NextResponse } from "next/server";
 
-export const GET = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
+export const GET = withErrorHandler(async (): Promise<NextResponse<ApiResponse>> => {
   try {
     const refreshToken = cookieUtil.getCookie("refreshToken");
 

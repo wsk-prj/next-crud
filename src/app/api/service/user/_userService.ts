@@ -1,10 +1,10 @@
-import { Auth } from "@/lib/auth/Auth";
+import { Auth } from "@/app/api/service/auth/Auth";
 import bcrypt from "bcrypt";
-import User, { UserProfile } from "./User";
-import { ServiceError } from "@/types/error/InternalError";
-import { userRepository } from "./_userRepository";
-import { authRepository } from "@/lib/auth/_authRepository";
-import { relationRepository } from "../relation/_relationRepository";
+import User, { UserProfile } from "@/app/api/service/user/User";
+import { ServiceError } from "@/types/api/error/InternalError";
+import { userRepository } from "@/app/api/service/user/_userRepository";
+import { authRepository } from "@/app/api/service/auth/_authRepository";
+import { relationRepository } from "@/app/api/service/relation/_relationRepository";
 export interface RegisterRequest {
   loginid: Auth["loginid"];
   loginpw: Auth["loginpw"];

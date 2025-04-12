@@ -2,7 +2,7 @@
 
 import { Container } from "@/components/container/Container";
 import { Button } from "@/components/form/Button";
-import { Links } from "@/components/form/Links";
+import { Links } from "@/components/common/Links";
 import { Text } from "@/components/text/Text";
 import { Title } from "@/components/text/Title";
 import { useAuthStore } from "@/hooks/useAuthStore";
@@ -10,10 +10,10 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { DELETE } from "@/scripts/api/apiClient";
 import { dateTimeUtil } from "@/utils/date/dateTimeUtil";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Box } from "../../components/container/Box";
-import { Flex } from "../../components/container/Flex";
-import Loading from "../../components/loading/Loading";
+import { useState } from "react";
+import { Box } from "@/components/container/Box";
+import { Flex } from "@/components/container/Flex";
+import Loading from "@/components/animations/Loading";
 
 const MyPage = (): React.ReactNode => {
   const router = useRouter();

@@ -6,17 +6,17 @@ import { Container } from "@/components/container/Container";
 import { Form } from "@/components/form/Form";
 import { Input } from "@/components/form/Input";
 import { Button } from "@/components/form/Button";
-import { Links } from "@/components/form/Links";
+import { Links } from "@/components/common/Links";
 import { POST } from "@/scripts/api/apiClient";
 import { useRouter } from "next/navigation";
 import { BoardResponse } from "@/app/api/v0/board/route";
 import { BoardRequest } from "@/app/api/v0/board/route";
-import { useAuthStore } from "@/hooks/useAuthStore";
 import { ErrorBox } from "@/components/form/ErrorBox";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 const BoardWrite = (): React.ReactNode => {
   const router = useRouter();
-  const { payload } = useAuthStore();
+  const { userProfile } = useUserProfile();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
@@ -24,13 +24,13 @@ const BoardWrite = (): React.ReactNode => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    if (!payload?.sub) {
+    if (!userProfile?.id) {
       setError("로그인 후 이용해주세요.");
       return;
     }
 
     const { result, error } = await POST<BoardRequest, BoardResponse>("/api/v0/board", {
-      user_id: payload.sub,
+      user_id: userProfile.id,
       title,
       content,
     });
