@@ -10,13 +10,13 @@ import { Form } from "@/components/form/Form";
 import { Input } from "@/components/form/Input";
 import { Button } from "@/components/form/Button";
 import { Links } from "@/components/common/Links";
-import { ErrorBox } from "@/components/form/ErrorBox";
+import { useError } from "@/hooks/useError";
 
 const MyPageEdit = (): React.ReactNode => {
   const router = useRouter();
   const { payload } = useAuthStore();
   const [nickname, setNickname] = useState(payload?.nickname || "");
-  const [error, setError] = useState("");
+  const { setError } = useError();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -42,7 +42,6 @@ const MyPageEdit = (): React.ReactNode => {
           <Input.Text name="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)}>
             닉네임
           </Input.Text>
-          <ErrorBox error={error} />
           <Button.Primary>수정</Button.Primary>
           <Links.Text href="/mypage">취소</Links.Text>
         </Form>

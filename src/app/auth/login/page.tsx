@@ -4,25 +4,21 @@ import { Container } from "@/components/container/Container";
 import { Title } from "@/components/text/Title";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Button } from "../../../components/form/Button";
-import { ErrorBox } from "../../../components/form/ErrorBox";
-import { Form } from "../../../components/form/Form";
-import { Input } from "../../../components/form/Input";
+import { useState } from "react";
+import { Button } from "@/components/form/Button";
+import { Form } from "@/components/form/Form";
+import { Input } from "@/components/form/Input";
 import { Links } from "@/components/common/Links";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useError } from "@/hooks/useError";
 
 const Login = (): React.ReactNode => {
   const router = useRouter();
   const { login } = useAuthStore();
   const { fetchUserProfile } = useUserProfile();
+  const { setError } = useError();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    setError("");
-  }, [id, password]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -49,6 +45,7 @@ const Login = (): React.ReactNode => {
         router.push("/");
       }
     } catch {
+      setError("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
       return;
     }
   };
@@ -64,7 +61,6 @@ const Login = (): React.ReactNode => {
           <Input.Password name="password" value={password} onChange={(e) => setPassword(e.target.value)}>
             비밀번호
           </Input.Password>
-          <ErrorBox error={error} />
           <Button.Primary>로그인</Button.Primary>
           <Links.Text href="/auth/signup">회원가입</Links.Text>
         </Form>

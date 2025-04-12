@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import DefaultLayout from "@/layout/DefaultLayout";
-import { Initializer } from "@/components/init/Initializer";
+import { Initializer } from "@/components/provider/init/Initializer";
+import { ErrorProvider } from "@/context/ErrorContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className={`h-screen ${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Initializer />
         <DefaultLayout>{children}</DefaultLayout>
+        <ErrorProvider />
       </body>
     </html>
   );

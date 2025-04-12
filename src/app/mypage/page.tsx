@@ -10,17 +10,17 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { DELETE } from "@/scripts/api/apiClient";
 import { dateTimeUtil } from "@/utils/date/dateTimeUtil";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Box } from "@/components/container/Box";
 import { Flex } from "@/components/container/Flex";
 import Loading from "@/components/animations/Loading";
+import { useError } from "@/hooks/useError";
 
 const MyPage = (): React.ReactNode => {
   const router = useRouter();
   const { payload } = useAuthStore();
   const { logout } = useAuthStore();
   const { userProfile } = useUserProfile();
-  const [error, setError] = useState<string | null>(null);
+  const { setError } = useError();
 
   const handleWithdrawal = async (): Promise<void> => {
     const input = prompt("정말로 탈퇴하시겠습니까? 탈퇴 후 복구는 불가능합니다. 동의하시면 닉네임을 입력해주세요.");

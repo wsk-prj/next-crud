@@ -4,10 +4,10 @@ import { RegisterRequest } from "@/app/api/service/user/_userService";
 import { Links } from "@/components/common/Links";
 import { Container } from "@/components/container/Container";
 import { Button } from "@/components/form/Button";
-import { ErrorBox } from "@/components/form/ErrorBox";
 import { Form } from "@/components/form/Form";
 import { Input } from "@/components/form/Input";
 import { Title } from "@/components/text/Title";
+import { useError } from "@/hooks/useError";
 import { POST } from "@/scripts/api/apiClient";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,7 +18,7 @@ const Signup = (): React.ReactNode => {
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+  const { setError } = useError();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -78,7 +78,6 @@ const Signup = (): React.ReactNode => {
           <Input.Text name="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)}>
             닉네임
           </Input.Text>
-          <ErrorBox error={error} />
           <Button.Primary>회원가입</Button.Primary>
           <Links.Text href="/auth/login">로그인</Links.Text>
         </Form>

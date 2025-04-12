@@ -4,7 +4,6 @@ import { BoardRequest, BoardResponse } from "@/app/api/v0/board/route";
 import { Links } from "@/components/common/Links";
 import { Container } from "@/components/container/Container";
 import { Button } from "@/components/form/Button";
-import { ErrorBox } from "@/components/form/ErrorBox";
 import { Form } from "@/components/form/Form";
 import { Input } from "@/components/form/Input";
 import Loading from "@/components/animations/Loading";
@@ -13,12 +12,13 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { GET, PATCH } from "@/scripts/api/apiClient";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useError } from "@/hooks/useError";
 
 const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
   const router = useRouter();
   const { userProfile } = useUserProfile();
   const [board, setBoard] = useState<BoardResponse>();
-  const [error, setError] = useState("");
+  const { setError } = useError();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -96,7 +96,6 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
             >
               내용
             </Input.Textarea>
-            <ErrorBox error={error} />
             <Button.Primary>수정</Button.Primary>
             <Links.Text href={`/board/${params.id}`}>취소</Links.Text>
           </Form>

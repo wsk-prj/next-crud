@@ -13,11 +13,12 @@ import { Text } from "@/components/text/Text";
 import { Container } from "@/components/container/Container";
 import PaginationComponent from "@/components/common/Pagination";
 import Loading from "@/components/animations/Loading";
+import { useError } from "@/hooks/useError";
 
 const BoardPage = (): React.ReactNode => {
   const [boardList, setBoardList] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { setError } = useError();
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
     currentPage: 1,

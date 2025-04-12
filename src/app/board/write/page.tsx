@@ -1,25 +1,24 @@
 "use client";
 
-import { Title } from "@/components/text/Title";
-import { useState } from "react";
+import { BoardRequest, BoardResponse } from "@/app/api/v0/board/route";
+import { Links } from "@/components/common/Links";
 import { Container } from "@/components/container/Container";
+import { Button } from "@/components/form/Button";
 import { Form } from "@/components/form/Form";
 import { Input } from "@/components/form/Input";
-import { Button } from "@/components/form/Button";
-import { Links } from "@/components/common/Links";
+import { Title } from "@/components/text/Title";
+import { useError } from "@/hooks/useError";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import { POST } from "@/scripts/api/apiClient";
 import { useRouter } from "next/navigation";
-import { BoardResponse } from "@/app/api/v0/board/route";
-import { BoardRequest } from "@/app/api/v0/board/route";
-import { ErrorBox } from "@/components/form/ErrorBox";
-import { useUserProfile } from "@/hooks/useUserProfile";
+import { useState } from "react";
 
 const BoardWrite = (): React.ReactNode => {
   const router = useRouter();
   const { userProfile } = useUserProfile();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [error, setError] = useState("");
+  const { setError } = useError();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -57,7 +56,6 @@ const BoardWrite = (): React.ReactNode => {
           <Input.Textarea name="content" value={content} onChange={(e) => setContent(e.target.value)}>
             내용
           </Input.Textarea>
-          <ErrorBox error={error} />
           <Button.Primary>작성</Button.Primary>
           <Links.Text href="/board">취소</Links.Text>
         </Form>
