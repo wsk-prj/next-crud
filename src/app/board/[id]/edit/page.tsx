@@ -77,7 +77,7 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
   return (
     <>
       <Title.h2>게시글 수정</Title.h2>
-      <Container.xxxl>
+      <Container.xl>
         {isLoading || !board ? (
           <Loading />
         ) : (
@@ -100,7 +100,7 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
             <Links.Text href={`/board/${params.id}`}>취소</Links.Text>
           </Form>
         )}
-      </Container.xxxl>
+      </Container.xl>
     </>
   );
 };

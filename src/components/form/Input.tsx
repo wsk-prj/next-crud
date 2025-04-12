@@ -47,7 +47,7 @@ export const Input = {
           id={name}
           value={value}
           onChange={onChange}
-          className="border border-gray-300 rounded-md p-2 h-72 w-full"
+          className="border border-gray-300 rounded-md p-2 h-72 w-full resize-none"
           placeholder={children as string}
           required
         />
