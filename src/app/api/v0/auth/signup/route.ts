@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { userService } from "@/app/api/service/user/_userService";
 import { ApiResponse } from "@/types/api/ApiResponse";
 import ResponseUtil from "@/app/api/_responseUtil";
 import { withErrorHandler } from "@/app/api/_errorHandler";
+import { authService } from "@/app/api/service/auth/_authService";
 
 export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
   const { loginid, loginpw, nickname } = await request.json();
@@ -14,7 +14,7 @@ export const POST = withErrorHandler(async (request: Request): Promise<NextRespo
   }
 
   try {
-    await userService.signup({ loginid, loginpw, nickname });
+    await authService.signup({ loginid, loginpw, nickname });
     return ResponseUtil.success({
       message: "회원가입이 완료되었습니다.",
     });

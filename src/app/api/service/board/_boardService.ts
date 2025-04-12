@@ -1,6 +1,5 @@
-import { BoardRequest, BoardResponse } from "@/app/api/v0/board/route";
+import { Board, BoardRequest, BoardResponse } from "@/app/api/service/board/Board";
 import { boardRepository } from "./_boardRepository";
-import { Board } from "@/app/api/service/board/Board";
 import { Paged } from "@/types/common/paged/Paged";
 
 export const boardService = {

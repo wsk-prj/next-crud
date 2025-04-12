@@ -1,8 +1,9 @@
 import { withErrorHandler } from "@/app/api/_errorHandler";
-import { authService, LoginRequest, LoginResponse } from "@/app/api/service/auth/_authService";
+import { authService } from "@/app/api/service/auth/_authService";
 import { ApiResponse } from "@/types/api/ApiResponse";
 import ResponseUtil from "@/app/api/_responseUtil";
 import { NextResponse } from "next/server";
+import { LoginRequest, LoginResponse } from "@/app/api/service/auth/Auth";
 
 export const POST = withErrorHandler(
   async (request: Request): Promise<NextResponse<ApiResponse<LoginResponse | null>>> => {

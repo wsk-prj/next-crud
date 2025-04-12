@@ -1,7 +1,6 @@
-import { Board } from "@/app/api/service/board/Board";
+import { Board, BoardRequest } from "@/app/api/service/board/Board";
 import { supabase } from "../../lib/supabase/_supabaseClient";
 import { ExternalServiceError } from "@/types/api/error/InternalError";
-import { BoardRequest } from "@/app/api/v0/board/route";
 
 export const boardRepository = {
   insertBoard: async (board: BoardRequest): Promise<number> => {

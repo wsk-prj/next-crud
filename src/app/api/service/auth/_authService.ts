@@ -2,21 +2,26 @@ import tokenProvider, { Payload } from "@/app/api/lib/_tokenProvider";
 import TokenProvider from "@/app/api/lib/_tokenProvider";
 import bcrypt from "bcrypt";
 import { userRepository } from "../user/_userRepository";
-import { Auth } from "./Auth";
+import { Auth, LoginRequest, RegisterRequest } from "./Auth";
 import cookieUtil from "@/app/api/utils/cookie/_cookieUtil";
 import { BadRequestError } from "@/types/api/error/BadRequest";
 import { authRepository } from "./_authRepository";
-
-export interface LoginRequest {
-  loginid: Auth["loginid"];
-  loginpw: Auth["loginpw"];
-}
-
-export interface LoginResponse {
-  payload: Payload;
-}
+import { ServiceError } from "@/types/api/error/InternalError";
+import User from "../user/User";
 
 export const authService = {
+  signup: async (request: RegisterRequest): Promise<void> => {
+    // 비밀번호 해싱(Bcrypt)
+    const hashedPassword = await bcrypt.hash(request.loginpw, 10);
+
+    try {
+      const user_id = await userRepository.insertUser({ nickname: request.nickname } as User);
+      await authRepository.insertAuth({ id: user_id, loginid: request.loginid, loginpw: hashedPassword } as Auth);
+    } catch (error) {
+      console.error("[signup] Error:", error);
+      throw new ServiceError("회원가입 중 오류가 발생했습니다.");
+    }
+  },
   login: async (request: LoginRequest): Promise<void> => {
     // 사용자가 입력한 id가 존재하는지 확인
     const auth = await authRepository.findAuthById(request.loginid);

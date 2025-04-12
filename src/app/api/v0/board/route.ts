@@ -1,26 +1,10 @@
 import responseUtil from "@/app/api/_responseUtil";
-import { Board } from "@/app/api/service/board/Board";
-import User from "@/app/api/service/user/User";
+import { BoardRequest, BoardResponse } from "@/app/api/service/board/Board";
 import { boardService } from "@/app/api/service/board/_boardService";
 import { ApiResponse } from "@/types/api/ApiResponse";
 import { Paged } from "@/types/common/paged/Paged";
 import { NextRequest, NextResponse } from "next/server";
 import { withErrorHandler } from "../../_errorHandler";
-
-export interface BoardRequest {
-  user_id: User["id"];
-  title: Board["title"];
-  content: Board["content"];
-}
-
-export interface BoardResponse {
-  id: Board["id"];
-  user_id: User["id"];
-  title: Board["title"];
-  content: Board["content"];
-  created_at: Board["created_at"];
-  updated_at: Board["updated_at"];
-}
 
 export const POST = withErrorHandler(
   async (request: NextRequest): Promise<NextResponse<ApiResponse<number | null>>> => {
