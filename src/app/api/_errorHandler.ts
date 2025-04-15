@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { NextRequest, NextResponse } from "next/server";
 import ResponseUtil from "@/app/api/_responseUtil";
 import { BadRequestError } from "@/types/api/error/BadRequest";
-import { InternalServerError } from "@/types/api/error/InternalError";
+import { ExternalServiceError, InternalServerError } from "@/types/api/error/InternalError";
 
 type RouteHandler = (req: NextRequest, ...args: any[]) => Promise<NextResponse>;
 
@@ -19,15 +18,22 @@ export function withErrorHandler(handler: RouteHandler): RouteHandler {
 
 const handleApiError = (error: unknown): NextResponse => {
   if (error instanceof BadRequestError) {
-    console.log("[errorHandler] BadRequestError:", error);
+    console.log("[errorHandler] BadRequestError:", error.message);
     return ResponseUtil.failed({
       message: error.message,
       status: error.statusCode,
     });
   }
 
+  if (error instanceof ExternalServiceError) {
+    console.log("[errorHandler] ExternalServiceError:", error.message);
+    return ResponseUtil.failed({
+      message: error.message,
+      status: error.statusCode,
+    });
+  }
   if (error instanceof InternalServerError) {
-    console.log("[errorHandler] InternalServerError:", error);
+    console.log("[errorHandler] InternalServerError:", error.message);
     return ResponseUtil.failed({
       message: error.message,
       status: error.statusCode,
@@ -36,7 +42,7 @@ const handleApiError = (error: unknown): NextResponse => {
 
   console.log("[errorHandler] Unhandled Error:", error);
   return ResponseUtil.failed({
-    message: "서버 오류가 발생했습니다",
+    message: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
     status: 500,
   });
 };

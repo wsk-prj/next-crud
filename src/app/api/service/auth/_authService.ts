@@ -1,48 +1,60 @@
-import tokenProvider, { Payload } from "@/app/api/lib/_tokenProvider";
-import TokenProvider from "@/app/api/lib/_tokenProvider";
-import bcrypt from "bcrypt";
-import { userRepository } from "../user/_userRepository";
-import { Auth, LoginRequest, RegisterRequest } from "./Auth";
+import { Payload, default as tokenProvider, default as TokenProvider } from "@/app/api/lib/_tokenProvider";
 import cookieUtil from "@/app/api/utils/cookie/_cookieUtil";
-import { BadRequestError } from "@/types/api/error/BadRequest";
+import { ForbiddenError } from "@/types/api/error/BadRequest";
+import { userRepository } from "../user/_userRepository";
+import { UserRequest } from "../user/dto/request/UserRequest";
+import { User } from "../user/User";
 import { authRepository } from "./_authRepository";
-import { ServiceError } from "@/types/api/error/InternalError";
-import User from "../user/User";
+import { transactionalService } from "../_transactionalService";
+import { Auth } from "./Auth";
+import { AuthRequest } from "./dto/request/AuthRequest";
 
 export const authService = {
-  signup: async (request: RegisterRequest): Promise<void> => {
-    // 비밀번호 해싱(Bcrypt)
-    const hashedPassword = await bcrypt.hash(request.loginpw, 10);
+  signup: async (authRequest: AuthRequest, userRequest: UserRequest): Promise<void> => {
+    // 사용자 삽입
+    let dbUser: User;
+    transactionalService.add({
+      operation: async () => {
+        const user: User = User.from(userRequest);
+        dbUser = await userRepository.insertUser(user);
+      },
+      rollback: async () => {
+        await userRepository.hardDeleteUser(dbUser.id!);
+      },
+    });
 
-    try {
-      const user_id = await userRepository.insertUser({ nickname: request.nickname } as User);
-      await authRepository.insertAuth({ id: user_id, loginid: request.loginid, loginpw: hashedPassword } as Auth);
-    } catch (error) {
-      console.error("[signup] Error:", error);
-      throw new ServiceError("회원가입 중 오류가 발생했습니다.");
-    }
+    // 로그인 정보 삽입
+    let dbAuth: Auth;
+    transactionalService.add({
+      operation: async () => {
+        const auth: Auth = await Auth.from({ ...authRequest, id: dbUser.id });
+        dbAuth = await authRepository.insertAuth(auth);
+      },
+      rollback: async () => {
+        await authRepository.hardDeleteAuth(dbAuth.id!);
+      },
+    });
+
+    await transactionalService.excuteAll();
   },
-  login: async (request: LoginRequest): Promise<void> => {
-    // 사용자가 입력한 id가 존재하는지 확인
-    const auth = await authRepository.findAuthById(request.loginid);
-
-    // 사용자가 입력한 비밀번호와 해싱된 비밀번호가 일치하는지 확인
-    const isPasswordEquals = await bcrypt.compare(request.loginpw, auth.loginpw);
-    if (!isPasswordEquals) {
-      throw new BadRequestError("로그인 정보가 잘못되었습니다.");
+  login: async (authReqeust: AuthRequest): Promise<void> => {
+    // 로그인 정보 확인
+    const dbAuth: Auth = await authRepository.findAuthByLoginId(authReqeust.loginid);
+    if (!(await dbAuth.loginpw?.isMatches(authReqeust.loginpw))) {
+      throw new ForbiddenError("로그인 정보가 잘못되었습니다.");
     }
 
-    const user = await userRepository.findUserById(auth.id);
-
-    // JWT 토큰 발급
+    // 액세스, 리프레시 토큰 발급
+    const dbUser = await userRepository.findUserById(dbAuth.id!);
     const payload = {
-      sub: String(user.id),
-      nickname: user.nickname,
-      role: user.role,
+      sub: String(dbUser.id),
+      nickname: dbUser.nickname,
+      role: dbUser.role,
     } as Payload;
     const token = TokenProvider.generateAccessToken(payload);
     const refreshToken = TokenProvider.generateRefreshToken(payload);
 
+    // 쿠키 설정
     cookieUtil.setCookie(
       { key: "accessToken", value: token },
       {
@@ -58,16 +70,19 @@ export const authService = {
     );
   },
   updateAccessToken: async (refreshToken: string): Promise<void> => {
+    // 사용자 조회
     const refreshTokenPayload = TokenProvider.getPayload(refreshToken);
-    const user = await userRepository.findUserById(Number(refreshTokenPayload.sub));
+    const dbUser = await userRepository.findUserById(Number(refreshTokenPayload.sub));
 
+    // 액세스 토큰 발급
     const payload = {
-      sub: String(user.id),
-      nickname: user.nickname,
-      role: user.role,
+      sub: String(dbUser.id),
+      nickname: dbUser.nickname,
+      role: dbUser.role,
     } as Payload;
     const accessToken = TokenProvider.generateAccessToken(payload);
 
+    // 쿠키 설정
     cookieUtil.setCookie(
       { key: "accessToken", value: accessToken },
       {

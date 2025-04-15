@@ -1,29 +1,16 @@
 import { withErrorHandler } from "@/app/api/_errorHandler";
-import { authService } from "@/app/api/service/auth/_authService";
-import { ApiResponse } from "@/types/api/ApiResponse";
 import ResponseUtil from "@/app/api/_responseUtil";
+import { authService } from "@/app/api/service/auth/_authService";
+import { AuthRequest } from "@/app/api/service/auth/dto/request/AuthRequest";
+import { ApiResponse } from "@/types/api/ApiResponse";
 import { NextResponse } from "next/server";
-import { LoginRequest, LoginResponse } from "@/app/api/service/auth/Auth";
 
-export const POST = withErrorHandler(
-  async (request: Request): Promise<NextResponse<ApiResponse<LoginResponse | null>>> => {
-    const loginRequest: LoginRequest = await request.json();
+export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
+  const loginRequest: AuthRequest = await request.json();
 
-    if (!loginRequest.loginid || !loginRequest.loginpw) {
-      return ResponseUtil.rejected({
-        message: "아이디와 비밀번호를 입력해야 합니다.",
-      });
-    }
+  await authService.login(loginRequest);
 
-    try {
-      await authService.login(loginRequest);
-      return ResponseUtil.success({
-        message: "로그인에 성공했습니다.",
-      });
-    } catch {
-      return ResponseUtil.failed({
-        message: "로그인에 실패했습니다.",
-      });
-    }
-  }
-);
+  return ResponseUtil.success({
+    message: "로그인에 성공했습니다.",
+  });
+});

@@ -1,31 +1,22 @@
 import { userRepository } from "@/app/api/service/user/_userRepository";
-import User, { UserProfile } from "@/app/api/service/user/User";
-import { ServiceError } from "@/types/api/error/InternalError";
+import { UserProfile } from "@/app/api/service/user/dto/response/UserProfile";
+import { User } from "@/app/api/service/user/User";
+import { UserRequest } from "./dto/request/UserRequest";
 
 export const userService = {
-  getUserProfile: async (id: User["id"]): Promise<UserProfile> => {
-    try {
-      const user = await userRepository.findUserById(id);
-      return user as UserProfile;
-    } catch (error) {
-      console.error("[getUserProfile] Error:", error);
-      throw new ServiceError("사용자 정보를 가져오는 데 실패했습니다.");
-    }
+  insertUser: async (userRequest: UserRequest): Promise<User> => {
+    const user = User.from(userRequest);
+    return await userRepository.insertUser(user);
   },
-  updateUserProfile: async (id: User["id"], { nickname }: Pick<User, "nickname">): Promise<void> => {
-    try {
-      await userRepository.updateUserById(id, { nickname });
-    } catch (error) {
-      console.error("[updateUserProfile] Error:", error);
-      throw new ServiceError("사용자 정보를 수정하는 데 실패했습니다.");
-    }
+  getUserProfile: async (id: number): Promise<UserProfile> => {
+    const user = await userRepository.findUserById(id);
+    return UserProfile.from(user);
   },
-  withdrawUser: async (id: User["id"]): Promise<void> => {
-    try {
-      await userRepository.deleteUserById(id);
-    } catch (error) {
-      console.error("[withdrawUser] Error:", error);
-      throw new ServiceError("회원 탈퇴 중 오류가 발생했습니다.");
-    }
+  updateUserProfile: async (id: number, userRequest: UserRequest): Promise<User> => {
+    const user = User.from(userRequest);
+    return await userRepository.updateUser(id, user);
+  },
+  withdrawUser: async (id: number): Promise<void> => {
+    await userRepository.deleteUser(id);
   },
 };

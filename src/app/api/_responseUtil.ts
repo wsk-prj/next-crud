@@ -20,7 +20,7 @@ const responseUtil = {
       { status: status ?? 200 }
     );
   },
-  rejected: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
+  reject: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
     return NextResponse.json(
       {
         message: message ?? "요청 거부",

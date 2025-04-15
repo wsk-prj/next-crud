@@ -1,18 +1,20 @@
 "use client";
 
-import { BoardRequest, BoardResponse } from "@/app/api/v0/board/route";
+import { BoardRequest } from "@/app/api/service/board/dto/request/BoardRequest";
+import { BoardResponse } from "@/app/api/service/board/dto/response/BoardResponse";
+import Loading from "@/components/animations/Loading";
 import { Links } from "@/components/common/Links";
 import { Container } from "@/components/container/Container";
 import { Button } from "@/components/form/Button";
 import { Form } from "@/components/form/Form";
 import { Input } from "@/components/form/Input";
-import Loading from "@/components/animations/Loading";
 import { Title } from "@/components/text/Title";
+import { useError } from "@/hooks/useError";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { GET, PATCH } from "@/scripts/api/apiClient";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useError } from "@/hooks/useError";
+import { ProtectedRoute } from "../../../../components/auth/ProtectedRoute";
 
 const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
   const router = useRouter();
@@ -28,7 +30,6 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
       if (error) {
         setError(error.message);
       }
-
       if (result) {
         setBoard(result.data);
       }
@@ -47,19 +48,16 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
       setError("로그인 후 이용해주세요.");
       return;
     }
-
     if (!board?.title) {
       setError("제목을 입력해주세요.");
       return;
     }
-
     if (!board?.content) {
       setError("내용을 입력해주세요.");
       return;
     }
 
     const { result, error } = await PATCH<BoardRequest, number>(`/api/v0/board/${params.id}`, {
-      user_id: userProfile.id,
       title: board.title,
       content: board.content,
     });
@@ -75,7 +73,7 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
   };
 
   return (
-    <>
+    <ProtectedRoute>
       <Title.h2>게시글 수정</Title.h2>
       <Container.xl>
         {isLoading || !board ? (
@@ -101,7 +99,7 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
           </Form>
         )}
       </Container.xl>
-    </>
+    </ProtectedRoute>
   );
 };
 

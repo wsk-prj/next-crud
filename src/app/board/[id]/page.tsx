@@ -21,7 +21,7 @@ export default function BoardIdPage({ params }: { params: { id: string } }): Rea
 
   useEffect(() => {
     const fetchBoard = async (): Promise<void> => {
-      const { result, error } = await GET<BoardResponse>(`/api/v0/board/${params.id}`);
+      const { result, error } = await GET<BoardResponse>(`/api/v0/board/${params.id}?incrementViewCount=true`);
 
       if (error) {
         console.error(error);

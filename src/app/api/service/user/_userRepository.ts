@@ -1,54 +1,81 @@
+import { NotFoundError } from "@/types/api/error/BadRequest";
 import { ExternalServiceError } from "@/types/api/error/InternalError";
 import { supabase } from "../../lib/supabase/_supabaseClient";
-import User from "./User";
-import { NotFoundError } from "@/types/api/error/BadRequest";
+import { User } from "./User";
+
+const USER_TABLE_NAME = "user";
+const USER_MESSAGE_NOT_FOUND = "사용자 정보가 존재하지 않습니다.";
 
 export const userRepository = {
-  insertUser: async (user: User): Promise<number> => {
-    const { data, error } = await supabase
-      .from("user")
-      .insert([{ nickname: user.nickname }])
+  insertUser: async (user: User): Promise<User> => {
+    const { data, error } = await supabase.from(USER_TABLE_NAME).insert(user.serialize()).select();
+
+    if (error) {
+      throw new ExternalServiceError(error.message);
+    }
+    if (data.length === 0) {
+      throw new NotFoundError(USER_MESSAGE_NOT_FOUND);
+    }
+
+    return User.from(data[0]);
+  },
+  findUserById: async (id: number): Promise<User> => {
+    const { data, error } = await supabase.from(USER_TABLE_NAME).select("*").eq("id", id).eq("is_deleted", false);
+
+    if (error) {
+      throw new ExternalServiceError(error.message);
+    }
+    if (data.length === 0) {
+      throw new NotFoundError(USER_MESSAGE_NOT_FOUND);
+    }
+
+    return User.from(data[0]);
+  },
+  updateUser: async (id: number, user: User): Promise<User> => {
+    const { data: dbUser, error: fetchError } = await supabase
+      .from(USER_TABLE_NAME)
+      .select("*")
+      .eq("id", id)
+      .eq("is_deleted", false);
+
+    if (fetchError) {
+      throw new ExternalServiceError(fetchError.message);
+    }
+    if (dbUser.length === 0) {
+      throw new NotFoundError(USER_MESSAGE_NOT_FOUND);
+    }
+
+    const { data: updatedData, error: updateError } = await supabase
+      .from(USER_TABLE_NAME)
+      .update({ ...dbUser[0], ...user.serialize(), updated_at: new Date() })
+      .eq("id", id)
+      .eq("is_deleted", false)
       .select();
 
-    if (error) {
-      console.error("[insertUser] Error:", error);
-      throw new ExternalServiceError("회원가입 중 오류가 발생했습니다.");
+    if (updateError) {
+      throw new ExternalServiceError(updateError.message);
+    }
+    if (updatedData.length === 0) {
+      throw new NotFoundError(USER_MESSAGE_NOT_FOUND);
     }
 
-    if (data?.[0] == null) {
-      throw new NotFoundError("회원 정보가 존재하지 않습니다.");
-    }
-
-    return data[0].id;
+    return User.from(updatedData[0]);
   },
-  findUserById: async (id: User["id"]): Promise<User> => {
-    const { data, error } = await supabase.from("user").select("*").eq("id", id).eq("is_deleted", false);
+  deleteUser: async (id: number): Promise<void> => {
+    const { error } = await supabase
+      .from(USER_TABLE_NAME)
+      .update({ is_deleted: true, updated_at: new Date() })
+      .eq("id", id);
 
     if (error) {
-      console.error("[findUserById] Error:", error);
-      throw new ExternalServiceError("회원 정보를 가져오는 중 오류가 발생했습니다.");
-    }
-
-    if (data?.[0] == null) {
-      throw new NotFoundError("회원 정보가 존재하지 않습니다.");
-    }
-
-    return data[0];
-  },
-  updateUserById: async (id: User["id"], { nickname }: Pick<User, "nickname">): Promise<void> => {
-    const { error } = await supabase.from("user").update({ nickname, updated_at: new Date() }).eq("id", id);
-
-    if (error) {
-      console.error("[updateUserById] Error:", error);
-      throw new ExternalServiceError("사용자 정보를 수정하는 중 오류가 발생했습니다.");
+      throw new ExternalServiceError(error.message);
     }
   },
-  deleteUserById: async (id: User["id"]): Promise<void> => {
-    const { error } = await supabase.from("user").update({ updated_at: new Date(), is_deleted: true }).eq("id", id);
+  hardDeleteUser: async (id: number): Promise<void> => {
+    const { error } = await supabase.from(USER_TABLE_NAME).delete().eq("id", id);
 
     if (error) {
-      console.error("[deleteUserById] Error:", error);
-      throw new ExternalServiceError("사용자 삭제 중 오류가 발생했습니다.");
+      throw new ExternalServiceError(error.message);
     }
   },
 };

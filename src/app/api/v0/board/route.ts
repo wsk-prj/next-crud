@@ -1,28 +1,28 @@
 import responseUtil from "@/app/api/_responseUtil";
-import { BoardRequest, BoardResponse } from "@/app/api/service/board/Board";
 import { boardService } from "@/app/api/service/board/_boardService";
-import { ApiResponse } from "@/types/api/ApiResponse";
 import { Paged } from "@/types/common/paged/Paged";
 import { NextRequest, NextResponse } from "next/server";
 import { withErrorHandler } from "../../_errorHandler";
+import { BoardRequest } from "../../service/board/dto/request/BoardRequest";
+import { BoardResponse } from "../../service/board/dto/response/BoardResponse";
+import { requestUtil } from "../../_requestUtil";
+import { Board } from "../../service/board/Board";
 
-export const POST = withErrorHandler(
-  async (request: NextRequest): Promise<NextResponse<ApiResponse<number | null>>> => {
-    const boardRequest: BoardRequest = await request.json();
+export const POST = withErrorHandler(async (request: NextRequest): Promise<NextResponse> => {
+  const boardRequest: BoardRequest = await request.json();
+  const payload = await requestUtil.getPayload();
 
-    const insertedBoardId = await boardService.insertBoard(boardRequest);
+  const board = Board.from({ ...boardRequest, user_id: Number(payload.sub) });
+  const insertedBoard = await boardService.insertBoard(board);
 
-    return responseUtil.success({ data: insertedBoardId });
-  }
-);
+  return responseUtil.success({ data: insertedBoard });
+});
 
-export const GET = withErrorHandler(
-  async (request: NextRequest): Promise<NextResponse<ApiResponse<Paged<BoardResponse> | null>>> => {
-    const requestParams = await request.nextUrl.searchParams;
-    const page = Number(requestParams.get("page") || "1");
-    const size = Number(requestParams.get("size") || "10");
+export const GET = withErrorHandler(async (request: NextRequest): Promise<NextResponse> => {
+  const requestParams = await request.nextUrl.searchParams;
+  const page = Number(requestParams.get("page") || "1");
+  const size = Number(requestParams.get("size") || "10");
 
-    const pagedResponse: Paged<BoardResponse> = await boardService.findAllBoards(page, size);
-    return responseUtil.success({ data: pagedResponse });
-  }
-);
+  const pagedResponse: Paged<BoardResponse> = await boardService.findAllBoards(page, size);
+  return responseUtil.success({ data: pagedResponse });
+});

@@ -12,7 +12,7 @@ import { Links } from "@/components/common/Links";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useError } from "@/hooks/useError";
 
-const Login = (): React.ReactNode => {
+const Login = ({ searchParams }: { searchParams: { callbackUrl: string } }): React.ReactNode => {
   const router = useRouter();
   const { login } = useAuthStore();
   const { fetchUserProfile } = useUserProfile();
@@ -37,9 +37,8 @@ const Login = (): React.ReactNode => {
       await fetchUserProfile();
 
       alert("로그인에 성공했습니다.");
-      const redirectPath = sessionStorage.getItem("redirectAfterLogin");
+      const redirectPath = searchParams.callbackUrl;
       if (redirectPath) {
-        sessionStorage.removeItem("redirectAfterLogin");
         router.push(redirectPath);
       } else {
         router.push("/");

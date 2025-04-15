@@ -1,6 +1,6 @@
 "use client";
 
-import { UserProfile } from "@/app/api/service/user/User";
+import { UserProfile } from "@/app/api/service/user/dto/response/UserProfile";
 import { GET } from "@/scripts/api/apiClient";
 import { create } from "zustand";
 

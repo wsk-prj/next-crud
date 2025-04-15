@@ -1,46 +1,27 @@
-import User, { UserProfile } from "@/app/api/service/user/User";
-import { userService } from "@/app/api/service/user/_userService";
-import { ApiResponse } from "@/types/api/ApiResponse";
-import ResponseUtil from "@/app/api/_responseUtil";
-import { NextRequest, NextResponse } from "next/server";
 import { withErrorHandler } from "@/app/api/_errorHandler";
+import responseUtil from "@/app/api/_responseUtil";
+import { userService } from "@/app/api/service/user/_userService";
+import { UserRequest } from "@/app/api/service/user/dto/request/UserRequest";
+import { requestUtil } from "@/app/api/_requestUtil";
+import { ApiResponse } from "@/types/api/ApiResponse";
+import { UserResponse } from "@supabase/auth-js";
+import { NextRequest, NextResponse } from "next/server";
 
 export const PATCH = withErrorHandler(
-  async (request: NextRequest): Promise<NextResponse<ApiResponse<UserProfile | null>>> => {
-    const { pathname } = request.nextUrl;
-    const id: User["id"] = Number(pathname.split("/").pop());
+  async (request: NextRequest): Promise<NextResponse<ApiResponse<UserResponse | null>>> => {
+    const id: number = requestUtil.getResourceId(request);
 
-    if (!id) {
-      return ResponseUtil.rejected({
-        message: "잘못된 요청입니다.",
-      });
-    }
+    const userRequest: UserRequest = await request.json();
+    await userService.updateUserProfile(id, userRequest);
 
-    const { nickname } = await request.json();
-
-    if (!nickname) {
-      return ResponseUtil.rejected({
-        message: "닉네임을 입력해야 합니다.",
-      });
-    }
-
-    await userService.updateUserProfile(Number(id), { nickname });
-
-    return ResponseUtil.success();
+    return responseUtil.success();
   }
 );
 
 export const DELETE = withErrorHandler(async (request: NextRequest): Promise<NextResponse<ApiResponse>> => {
-  const { pathname } = request.nextUrl;
-  const id: User["id"] = Number(pathname.split("/").pop());
-
-  if (!id) {
-    return ResponseUtil.rejected({
-      message: "잘못된 요청입니다.",
-    });
-  }
+  const id: number = requestUtil.getResourceId(request);
 
   await userService.withdrawUser(Number(id));
 
-  return ResponseUtil.success();
+  return responseUtil.success();
 });

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "@/app/api/service/user/User";
+import { User } from "@/app/api/service/user/User";
 import { jwtUtil } from "../utils/jwt/_jwtUtil";
 
 const JWT_ACCESS_TOKEN_EXPIRY: number = Number(process.env.JWT_ACCESS_TOKEN_EXPIRY!);
@@ -17,12 +17,12 @@ const tokenProvider = {
    * 토큰에서 페이로드 추출
    */
   getPayload: (token: string): Payload => {
-    const decoded = jwtUtil.decodeToken(token) as Payload;
+    const decoded = jwtUtil.decodeToken(token);
     return {
       sub: decoded.sub,
       nickname: decoded.nickname,
       role: decoded.role,
-    };
+    } as Payload;
   },
 
   /**
