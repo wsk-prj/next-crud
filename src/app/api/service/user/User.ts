@@ -1,7 +1,8 @@
+import { Key } from "../../lib/supabase/_supabaseClient";
 import { Nickname } from "./vo/Nickname";
 
 export class User {
-  id?: number;
+  id?: Key;
   nickname?: Nickname;
   role?: Role;
   created_at?: Date;
@@ -36,7 +37,7 @@ export class User {
 }
 
 type UserProps = {
-  id?: number;
+  id?: Key;
   nickname?: Nickname;
   role?: Role;
   created_at?: Date;

@@ -1,8 +1,9 @@
-import { LoginPassword } from "./vo/LoginPassword";
+import { Key } from "../../lib/supabase/_supabaseClient";
 import { LoginId } from "./vo/LoginId";
+import { LoginPassword } from "./vo/LoginPassword";
 
 export class Auth {
-  id?: number;
+  id?: Key;
   loginid?: LoginId;
   loginpw?: LoginPassword;
   created_at?: Date;
@@ -24,7 +25,7 @@ export class Auth {
 }
 
 type AuthProps = {
-  id?: number;
+  id?: Key;
   loginid?: LoginId;
   loginpw?: LoginPassword;
   created_at?: Date;

@@ -1,9 +1,10 @@
+import { Key } from "../../lib/supabase/_supabaseClient";
 import { BoardContent } from "./vo/BoardContent";
 import { BoardTitle } from "./vo/BoardTitle";
 
 export class Board {
-  id?: number;
-  user_id?: number;
+  id?: Key;
+  user_id?: Key;
   title?: BoardTitle;
   content?: BoardContent;
   view_count?: number;
@@ -40,8 +41,8 @@ export class Board {
 }
 
 type BoardProps = {
-  id?: number;
-  user_id?: number;
+  id?: Key;
+  user_id?: Key;
   title?: BoardTitle;
   content?: BoardContent;
   view_count?: number;
