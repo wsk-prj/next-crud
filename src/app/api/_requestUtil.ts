@@ -19,12 +19,16 @@ export const requestUtil = {
     return value ? value : defaultValue;
   },
   getPayload: async (): Promise<Payload> => {
-    const accessToken = cookieUtil.getCookie("accessToken");
-    const payload = jwtUtil.decodeToken(accessToken) as Payload;
-
-    if (!payload) {
-      throw new UnauthorizedError("잘못된 요청입니다.");
+    try {
+      const accessToken = cookieUtil.getCookie("accessToken");
+      const payload = jwtUtil.verifyTokenValid(accessToken) as Payload;
+      jwtUtil.verifyTokenExpired(accessToken);
+      if (!payload) {
+        throw new UnauthorizedError("잘못된 요청입니다.");
+      }
+      return payload;
+    } catch {
+      throw new UnauthorizedError("토큰이 만료되었습니다.");
     }
-    return payload;
   },
 };

@@ -14,10 +14,10 @@ import { Box } from "@/components/container/Box";
 import { Flex } from "@/components/container/Flex";
 import Loading from "@/components/animations/Loading";
 import { useError } from "@/hooks/useError";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 const MyPage = (): React.ReactNode => {
   const router = useRouter();
-  const { payload } = useAuthStore();
   const { logout } = useAuthStore();
   const { userProfile } = useUserProfile();
   const { setError } = useError();
@@ -34,7 +34,7 @@ const MyPage = (): React.ReactNode => {
       return;
     }
 
-    const { result, error } = await DELETE(`/api/v0/user/${payload?.sub}`);
+    const { result, error } = await DELETE(`/api/v0/user/${userProfile?.id}`);
 
     if (error) {
       setError(error.message);
@@ -49,7 +49,7 @@ const MyPage = (): React.ReactNode => {
   };
 
   return (
-    <>
+    <ProtectedRoute>
       <Title.h2>마이페이지</Title.h2>
       <Container.lg>
         {!userProfile ? (
@@ -92,7 +92,7 @@ const MyPage = (): React.ReactNode => {
           </>
         )}
       </Container.lg>
-    </>
+    </ProtectedRoute>
   );
 };
 

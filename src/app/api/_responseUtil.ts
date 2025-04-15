@@ -5,39 +5,44 @@ const now = (): string => new Date().toISOString();
 
 interface ResponseUtilParams<T> {
   data?: ApiResponse<T>["data"];
+  code?: ApiResponse<T>["code"];
   message?: ApiResponse<T>["message"];
   status?: number;
+  headers?: Record<string, string>;
 }
 
 const responseUtil = {
-  success: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
+  success: <T>(parmas: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
     return NextResponse.json(
       {
-        message: message ?? "요청 성공",
-        data: data ?? null,
+        message: parmas.message ?? "요청 성공",
+        code: parmas.code ?? "SUCCESS",
+        data: parmas.data ?? null,
         timestamp: now(),
       },
-      { status: status ?? 200 }
+      { status: parmas.status ?? 200, headers: parmas.headers }
     );
   },
-  reject: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
+  rejected: <T>(parmas: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
     return NextResponse.json(
       {
-        message: message ?? "요청 거부",
-        data: data ?? null,
+        message: parmas.message ?? "요청 거부",
+        code: parmas.code ?? "REJECTED",
+        data: parmas.data ?? null,
         timestamp: now(),
       },
-      { status: status ?? 400 }
+      { status: parmas.status ?? 400, headers: parmas.headers }
     );
   },
-  failed: <T>({ data, message, status }: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
+  failed: <T>(parmas: ResponseUtilParams<T> = {}): NextResponse<ApiResponse<T | null>> => {
     return NextResponse.json(
       {
-        message: message ?? "요청 실패",
-        data: data ?? null,
+        message: parmas.message ?? "요청 실패",
+        code: parmas.code ?? "FAILED",
+        data: parmas.data ?? null,
         timestamp: now(),
       },
-      { status: status ?? 500 }
+      { status: parmas.status ?? 500, headers: parmas.headers }
     );
   },
 };

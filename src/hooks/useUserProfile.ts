@@ -18,7 +18,8 @@ export const useUserProfile = create<UserProfileState>((set) => ({
     const { result, error } = await GET<UserProfile>(`/api/v0/user/profile`);
 
     if (error) {
-      throw new Error(error.message);
+      set({ userProfile: null });
+      throw error;
     }
 
     if (result != null) {
@@ -29,16 +30,3 @@ export const useUserProfile = create<UserProfileState>((set) => ({
     set({ userProfile: null });
   },
 }));
-
-export const initUserProfile = async (): Promise<void> => {
-  console.log(`[useUserProfile] initUserProfile`);
-  const { result, error } = await GET<UserProfile>(`/api/v0/user/profile`);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  if (result != null) {
-    useUserProfile.setState({ userProfile: result.data });
-  }
-};

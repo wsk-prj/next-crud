@@ -2,7 +2,7 @@ import { BadRequestError } from "@/types/api/error/BadRequest";
 
 const NICKNAME_MIN_LENGTH = 2;
 const NICKNAME_MAX_LENGTH = 20;
-const NICKNAME_REGEX = /^[a-zA-Z0-9가-힣_]+$/;
+const NICKNAME_REGEX = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣_]+$/;
 
 export class Nickname {
   readonly value: string;

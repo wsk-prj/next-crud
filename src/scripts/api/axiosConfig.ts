@@ -12,10 +12,12 @@ const instance = axios.create({
 instance.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // 401 Unauthorized
     if (error.response?.status === 401) {
       await axios.get("/api/v0/auth/refresh", { withCredentials: true });
       return instance(error.config);
     }
+
     return Promise.reject(error);
   }
 );

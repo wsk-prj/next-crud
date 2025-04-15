@@ -1,29 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
-import { initAuthStore } from "@/hooks/useAuthStore";
-import { initUserProfile } from "@/hooks/useUserProfile";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { useEffect } from "react";
 
 export const Initializer = (): null => {
-  const { payload } = useAuthStore();
+  const { checkAuth } = useAuthStore();
+  const { fetchUserProfile } = useUserProfile();
 
   useEffect(() => {
     (async () => {
-      await initAuthStore();
+      await checkAuth();
+      await fetchUserProfile();
     })();
   }, []);
-
-  useEffect(() => {
-    if (!payload) {
-      console.log(`[Initializer] payload is not set`);
-      return;
-    }
-
-    (async () => {
-      await initUserProfile();
-    })();
-  }, [payload]);
 
   return null;
 };

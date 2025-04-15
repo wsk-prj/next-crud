@@ -7,6 +7,7 @@ interface AuthState {
   loggedIn: boolean;
   login: (id: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -19,29 +20,43 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
 
     if (error) {
-      throw new Error(error.message);
+      set({ loggedIn: false });
+      throw error;
     }
 
     set({ loggedIn: true });
   },
   logout: async () => {
     console.log("[useAuthStore] logout");
+    set({ loggedIn: false });
+
     const { error } = await GET("/api/v0/auth/logout");
 
     if (error) {
-      throw new Error(error.message);
+      throw error;
     }
-    set({ loggedIn: false });
+  },
+  checkAuth: async (): Promise<void> => {
+    console.log("[useAuthStore] checkAuth");
+
+    const currentPath = window.location.pathname;
+    if (publicRoutePaths.includes(currentPath)) {
+      return;
+    }
+
+    const { error } = await GET("/api/v0/auth/check");
+
+    if (error) {
+      set({ loggedIn: false });
+      if (error?.code === "SESSION_EXPIRED") {
+        alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+        const currentPath = window.location.pathname + window.location.search;
+        window.location.href = `/auth/login?callbackUrl=${encodeURIComponent(currentPath)}`;
+        return;
+      }
+      throw error;
+    }
   },
 }));
 
-export const initAuthStore = async (): Promise<void> => {
-  console.log("[useAuthStore] initAuthStore");
-  const { error } = await GET("/api/v0/auth/check");
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  useAuthStore.setState({ loggedIn: true });
-};
+const publicRoutePaths = ["/auth/login", "/auth/login?", "/auth/register", "/auth/register?", "/board"];

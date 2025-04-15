@@ -14,6 +14,7 @@ export const PATCH = withErrorHandler(
     const userRequest: UserRequest = await request.json();
     await userService.updateUserProfile(id, userRequest);
 
+    // TODO: 회원정보 수정 후 쿠키, 토큰 갱신
     return responseUtil.success();
   }
 );
@@ -23,5 +24,6 @@ export const DELETE = withErrorHandler(async (request: NextRequest): Promise<Nex
 
   await userService.withdrawUser(Number(id));
 
+  // TODO: 회원탈퇴 후 쿠키, 토큰 삭제
   return responseUtil.success();
 });

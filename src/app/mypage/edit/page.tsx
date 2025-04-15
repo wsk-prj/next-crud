@@ -1,27 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import { PATCH } from "@/scripts/api/apiClient";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/hooks/useAuthStore";
-import { Title } from "@/components/text/Title";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { Links } from "@/components/common/Links";
 import { Container } from "@/components/container/Container";
+import { Button } from "@/components/form/Button";
 import { Form } from "@/components/form/Form";
 import { Input } from "@/components/form/Input";
-import { Button } from "@/components/form/Button";
-import { Links } from "@/components/common/Links";
+import { Title } from "@/components/text/Title";
 import { useError } from "@/hooks/useError";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { PATCH } from "@/scripts/api/apiClient";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const MyPageEdit = (): React.ReactNode => {
   const router = useRouter();
-  const { payload } = useAuthStore();
-  const [nickname, setNickname] = useState(payload?.nickname || "");
+  const { userProfile } = useUserProfile();
+  const [nickname, setNickname] = useState(userProfile?.nickname || "");
   const { setError } = useError();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    const { result, error } = await PATCH(`/api/v0/user/${payload?.sub}`, { nickname });
+    const { result, error } = await PATCH(`/api/v0/user/${userProfile?.id}`, { nickname });
 
     if (error) {
       setError(error.message);
@@ -35,7 +36,7 @@ const MyPageEdit = (): React.ReactNode => {
   };
 
   return (
-    <>
+    <ProtectedRoute>
       <Title.h2>회원정보 수정</Title.h2>
       <Container.md>
         <Form onSubmit={handleSubmit}>
@@ -46,7 +47,7 @@ const MyPageEdit = (): React.ReactNode => {
           <Links.Text href="/mypage">취소</Links.Text>
         </Form>
       </Container.md>
-    </>
+    </ProtectedRoute>
   );
 };
 
