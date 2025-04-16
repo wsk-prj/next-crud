@@ -15,6 +15,7 @@ import { GET, PATCH } from "@/scripts/api/apiClient";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ProtectedRoute } from "../../../../components/auth/ProtectedRoute";
+import { routes } from "@/utils/routes";
 
 const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
 
   useEffect(() => {
     const fetchBoard = async (): Promise<void> => {
-      const { result, error } = await GET<BoardResponse>(`/api/v0/board/${params.id}`);
+      const { result, error } = await GET<BoardResponse>(routes.api.v0.board.resource.uri(params.id));
 
       if (error) {
         setError(error.message);
@@ -57,7 +58,7 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
       return;
     }
 
-    const { result, error } = await PATCH<BoardRequest, number>(`/api/v0/board/${params.id}`, {
+    const { result, error } = await PATCH<BoardRequest, number>(routes.api.v0.board.resource.uri(params.id), {
       title: board.title,
       content: board.content,
     });
@@ -68,7 +69,7 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
 
     if (result) {
       alert("게시글이 수정되었습니다.");
-      router.push(`/board/${result.data}`);
+      router.push(routes.board.resource.uri(result.data));
     }
   };
 
@@ -95,7 +96,7 @@ const BoardEdit = ({ params }: { params: { id: string } }): React.ReactNode => {
               내용
             </Input.Textarea>
             <Button.Primary>수정</Button.Primary>
-            <Links.Text href={`/board/${params.id}`}>취소</Links.Text>
+            <Links.Text href={routes.board.resource.uri(params.id)}>취소</Links.Text>
           </Form>
         )}
       </Container.xl>

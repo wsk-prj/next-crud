@@ -12,6 +12,7 @@ import { useState } from "react";
 import { ProtectedRoute } from "../../../components/auth/ProtectedRoute";
 import { BoardRequest } from "@/app/api/service/board/dto/request/BoardRequest";
 import { BoardResponse } from "@/app/api/service/board/dto/response/BoardResponse";
+import { routes } from "@/utils/routes";
 
 const BoardWrite = (): React.ReactNode => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const BoardWrite = (): React.ReactNode => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    const { result, error } = await POST<BoardRequest, BoardResponse>("/api/v0/board", {
+    const { result, error } = await POST<BoardRequest, BoardResponse>(routes.api.v0.board.uri(), {
       title,
       content,
     });
@@ -32,9 +33,8 @@ const BoardWrite = (): React.ReactNode => {
     }
 
     if (result) {
-      console.log(result);
       alert("게시글이 성공적으로 작성되었습니다.");
-      router.push(`/board/${result.data.id}`);
+      router.push(routes.board.resource.uri(result.data.id));
     }
   };
 
@@ -50,7 +50,7 @@ const BoardWrite = (): React.ReactNode => {
             내용
           </Input.Textarea>
           <Button.Primary>작성</Button.Primary>
-          <Links.Text href="/board">취소</Links.Text>
+          <Links.Text href={routes.board.uri()}>취소</Links.Text>
         </Form>
       </Container.xl>
     </ProtectedRoute>

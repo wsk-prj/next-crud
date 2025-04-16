@@ -15,6 +15,7 @@ import { Flex } from "@/components/container/Flex";
 import Loading from "@/components/animations/Loading";
 import { useError } from "@/hooks/useError";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { routes } from "@/utils/routes";
 
 const MyPage = (): React.ReactNode => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const MyPage = (): React.ReactNode => {
       return;
     }
 
-    const { result, error } = await DELETE(`/api/v0/user/${userProfile?.id}`);
+    const { result, error } = await DELETE(routes.api.v0.user.uri(userProfile?.id));
 
     if (error) {
       setError(error.message);
@@ -44,7 +45,7 @@ const MyPage = (): React.ReactNode => {
     if (result != null) {
       alert("탈퇴가 완료되었습니다.");
       logout();
-      router.push("/");
+      router.push(routes.root);
     }
   };
 
@@ -83,7 +84,7 @@ const MyPage = (): React.ReactNode => {
             <div className="mb-6"></div>
             <Flex.Horizontal justify="center">
               <div className="w-1/3">
-                <Links.Button href="/mypage/edit">!정보 수정</Links.Button>
+                <Links.Button href={routes.mypage.edit.uri()}>!정보 수정</Links.Button>
               </div>
               <div className="w-1/3">
                 <Button.Warn onClick={handleWithdrawal}>!회원 탈퇴</Button.Warn>

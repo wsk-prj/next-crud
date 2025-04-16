@@ -1,6 +1,6 @@
 "use client";
 
-import { RegisterRequest } from "@/app/api/service/user/_userService";
+import { AuthRequest } from "@/app/api/service/auth/dto/request/AuthRequest";
 import { Links } from "@/components/common/Links";
 import { Container } from "@/components/container/Container";
 import { Button } from "@/components/form/Button";
@@ -9,6 +9,7 @@ import { Input } from "@/components/form/Input";
 import { Title } from "@/components/text/Title";
 import { useError } from "@/hooks/useError";
 import { POST } from "@/scripts/api/apiClient";
+import { routes } from "@/utils/routes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -40,11 +41,11 @@ const Signup = (): React.ReactNode => {
       return;
     }
 
-    const { result, error } = await POST<RegisterRequest>("/api/v0/auth/signup", {
+    const { result, error } = await POST<AuthRequest>(routes.api.v0.auth.signup.uri(), {
       loginid: id,
       loginpw: password,
       nickname: nickname,
-    } as RegisterRequest);
+    } as AuthRequest);
 
     if (error) {
       setError(error.message);
@@ -53,7 +54,7 @@ const Signup = (): React.ReactNode => {
 
     if (result) {
       alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
-      router.push("/auth/login");
+      router.push(routes.auth.login.uri());
     }
   };
 
@@ -79,7 +80,7 @@ const Signup = (): React.ReactNode => {
             닉네임
           </Input.Text>
           <Button.Primary>회원가입</Button.Primary>
-          <Links.Text href="/auth/login">로그인</Links.Text>
+          <Links.Text href={routes.auth.login.uri()}>로그인</Links.Text>
         </Form>
       </Container.md>
     </>

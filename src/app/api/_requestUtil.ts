@@ -1,7 +1,7 @@
 import { UnauthorizedError } from "@/types/api/error/BadRequest";
 import { NextRequest } from "next/server";
 import { Payload } from "./lib/_tokenProvider";
-import cookieUtil from "./utils/cookie/_cookieUtil";
+import httpHeaderUtil from "./utils/header/_httpHeaderUtil";
 import { jwtUtil } from "./utils/jwt/_jwtUtil";
 
 export const requestUtil = {
@@ -12,9 +12,9 @@ export const requestUtil = {
   },
   getPayload: async (): Promise<Payload> => {
     try {
-      const accessToken = cookieUtil.getCookie("accessToken");
-      const payload = jwtUtil.verifyTokenValid(accessToken) as Payload;
-      jwtUtil.verifyTokenExpired(accessToken);
+      const accessToken = httpHeaderUtil.getAuthorization();
+      const payload = jwtUtil.verifyTokenValid(accessToken!) as Payload;
+      jwtUtil.verifyTokenExpired(accessToken!);
       if (!payload) {
         throw new UnauthorizedError("잘못된 요청입니다.");
       }

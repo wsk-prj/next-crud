@@ -12,6 +12,10 @@ import { Links } from "@/components/common/Links";
 import Loading from "@/components/animations/Loading";
 import { Button } from "@/components/form/Button";
 import { useRouter } from "next/navigation";
+import { dateTimeUtil } from "@/utils/date/dateTimeUtil";
+import { Box } from "@/components/container/Box";
+import CommentComponent from "./CommentComponent";
+import { routes } from "@/utils/routes";
 
 export default function BoardIdPage({ params }: { params: { id: string } }): React.ReactNode {
   const router = useRouter();
@@ -21,7 +25,9 @@ export default function BoardIdPage({ params }: { params: { id: string } }): Rea
 
   useEffect(() => {
     const fetchBoard = async (): Promise<void> => {
-      const { result, error } = await GET<BoardResponse>(`/api/v0/board/${params.id}?incrementViewCount=true`);
+      const { result, error } = await GET<BoardResponse>(
+        routes.api.v0.board.resource.uri(params.id, { incrementViewCount: true })
+      );
 
       if (error) {
         console.error(error);
@@ -40,14 +46,14 @@ export default function BoardIdPage({ params }: { params: { id: string } }): Rea
 
   const handleDeleteAction = async (): Promise<void> => {
     if (confirm("게시글을 삭제하시겠습니까? 삭제 후 복구할 수 없습니다.")) {
-      const { error } = await DELETE(`/api/v0/board/${params.id}`);
+      const { error } = await DELETE(routes.api.v0.board.resource.uri(params.id));
 
       if (error) {
         return;
       }
 
       alert("게시글이 삭제되었습니다.");
-      router.push("/board");
+      router.push(routes.board.uri());
     }
   };
 
@@ -72,7 +78,7 @@ export default function BoardIdPage({ params }: { params: { id: string } }): Rea
               <Line.Horizontal />
               {userProfile?.id === board.user_id && (
                 <div className="w-full flex flex-row justify-center gap-2">
-                  <Links.Button href={`/board/${board.id}/edit`} color="secondary">
+                  <Links.Button href={routes.board.resource.edit.uri(board.id)} color="secondary">
                     수정
                   </Links.Button>
                   <Button.Warn onClick={handleDeleteAction}>삭제</Button.Warn>

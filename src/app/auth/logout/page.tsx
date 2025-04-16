@@ -2,6 +2,7 @@
 
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { routes } from "@/utils/routes";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -14,7 +15,7 @@ const Logout = (): React.ReactNode => {
     logout();
     removeUserProfile();
     alert("로그아웃에 성공했습니다.");
-    router.push("/");
+    router.push(routes.root);
   }, []);
 
   return;

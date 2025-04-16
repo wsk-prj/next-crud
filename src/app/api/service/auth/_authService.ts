@@ -8,6 +8,8 @@ import { authRepository } from "./_authRepository";
 import { transactionalService } from "../_transactionalService";
 import { Auth } from "./Auth";
 import { AuthRequest } from "./dto/request/AuthRequest";
+import httpHeaderUtil from "../../utils/header/_httpHeaderUtil";
+import { Token } from "@/types/Token";
 
 export const authService = {
   signup: async (authRequest: AuthRequest, userRequest: UserRequest): Promise<void> => {
@@ -37,7 +39,7 @@ export const authService = {
 
     await transactionalService.excuteAll();
   },
-  login: async (authReqeust: AuthRequest): Promise<void> => {
+  login: async (authReqeust: AuthRequest): Promise<Token> => {
     // 로그인 정보 확인
     const dbAuth: Auth = await authRepository.findAuthByLoginId(authReqeust.loginid);
     if (!(await dbAuth.loginpw?.isMatches(authReqeust.loginpw))) {
@@ -51,25 +53,20 @@ export const authService = {
       nickname: dbUser.nickname,
       role: dbUser.role,
     } as Payload;
-    const token = TokenProvider.generateAccessToken(payload);
+    const accessToken = TokenProvider.generateAccessToken(payload);
     const refreshToken = TokenProvider.generateRefreshToken(payload);
 
-    // 쿠키 설정
-    cookieUtil.setCookie(
-      { key: "accessToken", value: token },
-      {
-        maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRY),
-      }
-    );
-
+    // 리프레시 토큰 설정(쿠키)
     cookieUtil.setCookie(
       { key: "refreshToken", value: refreshToken },
       {
         maxAge: Number(process.env.JWT_REFRESH_TOKEN_EXPIRY),
       }
     );
+
+    return { token: accessToken };
   },
-  updateAccessToken: async (refreshToken: string): Promise<void> => {
+  updateAccessToken: async (refreshToken: string): Promise<Token> => {
     // 사용자 조회
     const refreshTokenPayload = TokenProvider.getPayload(refreshToken);
     const dbUser = await userRepository.findUserById(Number(refreshTokenPayload.sub));
@@ -83,12 +80,7 @@ export const authService = {
     const accessToken = TokenProvider.generateAccessToken(payload);
 
     // 쿠키 설정
-    cookieUtil.setCookie(
-      { key: "accessToken", value: accessToken },
-      {
-        maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRY),
-      }
-    );
+    return { token: accessToken };
   },
   updateRefreshToken: async (refreshToken: string): Promise<void> => {
     if (!tokenProvider.shouldRefreshToken(refreshToken)) {

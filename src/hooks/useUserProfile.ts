@@ -1,6 +1,7 @@
 "use client";
 
 import { UserProfile } from "@/app/api/service/user/dto/response/UserProfile";
+import { PUBLIC_PATHS, routes } from "@/utils/routes";
 import { GET } from "@/scripts/api/apiClient";
 import { create } from "zustand";
 
@@ -13,9 +14,13 @@ interface UserProfileState {
 export const useUserProfile = create<UserProfileState>((set) => ({
   userProfile: null,
   fetchUserProfile: async () => {
-    console.log(`[useUserProfile] fetchUserProfile`);
+    const currentPath = window.location.pathname;
+    if (PUBLIC_PATHS.includes(currentPath)) {
+      return;
+    }
 
-    const { result, error } = await GET<UserProfile>(`/api/v0/user/profile`);
+    console.log(`[useUserProfile] fetchUserProfile`);
+    const { result, error } = await GET<UserProfile>(routes.api.v0.user.profile.uri());
 
     if (error) {
       set({ userProfile: null });

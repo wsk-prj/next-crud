@@ -14,6 +14,7 @@ import { Container } from "@/components/container/Container";
 import PaginationComponent from "@/components/common/Pagination";
 import Loading from "@/components/animations/Loading";
 import { useError } from "@/hooks/useError";
+import { routes } from "@/utils/routes";
 
 const BoardPage = (): React.ReactNode => {
   const [boardList, setBoardList] = useState<Board[]>([]);
@@ -31,7 +32,7 @@ const BoardPage = (): React.ReactNode => {
     async (page: number): Promise<void> => {
       setLoading(true);
       try {
-        const { result, error } = await GET<Paged<Board>>(`/api/v0/board?page=${page}&size=${pagination.pageSize}`);
+        const { result, error } = await GET<Paged<Board>>(routes.api.v0.board.uri({ page, size: pagination.pageSize }));
 
         if (error) {
           setError(error.message);
@@ -72,7 +73,7 @@ const BoardPage = (): React.ReactNode => {
           <Flex.Vertical justify="between" align="between">
             <Flex.Horizontal justify="between">
               <Text.sm>총 {pagination.totalItems}개의 게시글</Text.sm>
-              <Links.Button href="/board/write" size="sm">
+              <Links.Button href={routes.board.write.uri()} size="sm">
                 글쓰기
               </Links.Button>
             </Flex.Horizontal>
@@ -91,7 +92,7 @@ const BoardPage = (): React.ReactNode => {
                   <Table.tr key={board.id}>
                     <Table.td align="center">{board.id}</Table.td>
                     <Table.td>
-                      <Links.Text href={`/board/${board.id}`}>{board.title}</Links.Text>
+                      <Links.Text href={routes.board.resource.uri(board.id)}>{board.title}</Links.Text>
                     </Table.td>
                     <Table.td align="center">
                       {/* TODO: 작성자 메뉴 모달 */}

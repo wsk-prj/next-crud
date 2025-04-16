@@ -11,6 +11,7 @@ import { Input } from "@/components/form/Input";
 import { Links } from "@/components/common/Links";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useError } from "@/hooks/useError";
+import { routes } from "@/utils/routes";
 
 const Login = ({ searchParams }: { searchParams: { callbackUrl: string } }): React.ReactNode => {
   const router = useRouter();
@@ -41,7 +42,7 @@ const Login = ({ searchParams }: { searchParams: { callbackUrl: string } }): Rea
       if (redirectPath) {
         router.push(redirectPath);
       } else {
-        router.push("/");
+        router.push(routes.root);
       }
     } catch {
       setError("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
@@ -61,7 +62,7 @@ const Login = ({ searchParams }: { searchParams: { callbackUrl: string } }): Rea
             비밀번호
           </Input.Password>
           <Button.Primary>로그인</Button.Primary>
-          <Links.Text href="/auth/signup">회원가입</Links.Text>
+          <Links.Text href={routes.auth.signup.uri()}>회원가입</Links.Text>
         </Form>
       </Container.md>
     </>

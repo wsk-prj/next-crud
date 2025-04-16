@@ -5,12 +5,13 @@ import { AuthRequest } from "@/app/api/service/auth/dto/request/AuthRequest";
 import { ApiResponse } from "@/types/api/ApiResponse";
 import { NextResponse } from "next/server";
 
-export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse>> => {
+export const POST = withErrorHandler(async (request: Request): Promise<NextResponse<ApiResponse<string | null>>> => {
   const loginRequest: AuthRequest = await request.json();
 
-  await authService.login(loginRequest);
+  const accessToken = await authService.login(loginRequest);
 
   return ResponseUtil.success({
     message: "로그인에 성공했습니다.",
+    data: accessToken,
   });
 });

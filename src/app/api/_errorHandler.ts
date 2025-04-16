@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import ResponseUtil from "@/app/api/_responseUtil";
-import { BadRequestError } from "@/types/api/error/BadRequest";
+import { BadRequestError, UnauthorizedError } from "@/types/api/error/BadRequest";
 import { ExternalServiceError, InternalServerError } from "@/types/api/error/InternalError";
+import csrfUtil from "@/app/api/utils/cookie/_csrfUtil";
 
 type RouteHandler = (req: NextRequest, ...args: any[]) => Promise<NextResponse>;
 
@@ -16,10 +17,18 @@ export function withErrorHandler(handler: RouteHandler): RouteHandler {
   };
 }
 
-const handleApiError = (error: unknown): NextResponse => {
+const handleApiError = async (error: unknown): Promise<NextResponse> => {
+  if (error instanceof UnauthorizedError) {
+    console.log("[errorHandler] UnauthorizedError:", error.message);
+    return ResponseUtil.rejected({
+      message: error.message,
+      data: { token: await csrfUtil.getToken() },
+      status: 401,
+    });
+  }
   if (error instanceof BadRequestError) {
     console.log("[errorHandler] BadRequestError:", error.message);
-    return ResponseUtil.failed({
+    return ResponseUtil.rejected({
       message: error.message,
       status: error.statusCode,
     });
